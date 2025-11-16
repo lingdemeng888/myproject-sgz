@@ -1,0 +1,27 @@
+<view class="container">
+  <image class="bg" src="../assets/乐技楼.jpg" mode="aspectFill"></image>
+  <view class="overlay"></view>
+
+  <view class="header">
+    <text class="title-line">苏州高等职业技术学校</text>
+    <text class="title-line">毕业设计选题管理系统</text>
+  </view>
+
+  <scroll-view class="content" scroll-y>
+    <!-- 登录卡片 -->
+    <view class="card">
+      <text class="section-title">导师登录</text>
+
+      <input class="input" placeholder="工号/手机号" bindinput="onChangeId"/>
+      <view class="row">
+        <input class="input flex1" password placeholder="密码" bindinput="onChangePwd"/>
+        <button class="btn btn-primary" size="mini" bindtap="sendCode" disabled="{{!canSend}}">发送验证码</button>
+      </view>
+      <input class="input" placeholder="验证码（6位）" maxlength="6" bindinput="onChangeCode"/>
+      <button class="btn btn-primary" bindtap="login">登陆导师端主页</button>
+    </view>
+
+    <!-- 注册引导盒子 -->
+    <view class="register-box" bindtap="toRegister">无账号？前去注册！</view>
+  </scroll-view>
+</view>

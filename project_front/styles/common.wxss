@@ -1,0 +1,16 @@
+/* 通用样式与工具类 */
+.fullscreen{position:relative;width:100vw;height:100vh;overflow:hidden}
+.bg{position:absolute;inset:0;width:100%;height:100%}
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,0.25)}
+.title-hero{color:#fff;font-size:60rpx;font-family:'STXinwei','华文新魏','KaiTi','STKaiti','Noto Serif SC',serif;text-shadow:0 4rpx 8rpx rgba(0,0,0,0.65),0 -2rpx 0 rgba(255,255,255,0.25)}
+.kaiti{font-family:'KaiTi','STKaiti','Kaiti SC','Noto Serif SC',serif}
+.option-box{background:rgba(181,136,99,0.7);border-radius:16rpx;box-shadow:0 6rpx 14rpx rgba(0,0,0,0.25)}
+.input-card{background:rgba(0,0,0,0.25);padding:24rpx;border-radius:16rpx}
+.input{background:rgba(255,255,255,0.9);border-radius:10rpx;padding:18rpx 22rpx;margin-bottom:18rpx}
+.row{display:flex;align-items:center;gap:16rpx}
+.btn{background:#b58863;color:#fff;border-radius:10rpx;padding:16rpx 22rpx}
+.btn-primary{background:#b58863}
+.btn-secondary{background:rgba(0,0,0,0.5)}
+.text-white{color:#fff}
+.center{text-align:center}
+.small{font-size:24rpx}

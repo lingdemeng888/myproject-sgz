@@ -1,0 +1,18 @@
+<view class="container">
+  <image class="bg" src="../assets/乐技楼.jpg" mode="aspectFill"></image>
+  <view class="overlay"></view>
+
+  <view class="header">
+    <text class="title-line">苏州高等职业技术学校</text>
+    <text class="title-line">毕业设计选题管理系统</text>
+  </view>
+
+  <view class="options">
+    <view class="option" bindtap="goTutor">
+      <text class="option-text">我是导师</text>
+    </view>
+    <view class="option" bindtap="goAdmin">
+      <text class="option-text">我是管理员</text>
+    </view>
+  </view>
+</view>

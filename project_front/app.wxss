@@ -1,0 +1,7 @@
+/* 全局样式，仅做基础重置 */
+page {
+  height: 100%;
+  width: 100%;
+  /* 背景图片请使用页面内 <image> 标签加载；WXSS 不支持本地资源作为 background-image */
+  background: #000;
+}

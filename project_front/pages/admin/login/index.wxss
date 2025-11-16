@@ -1,0 +1,13 @@
+@import '../../../styles/common.wxss';
+.container{position:relative;width:100vw;height:100vh;overflow:hidden}
+.bg{position:absolute;inset:0;width:100%;height:100%}
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,0.25)}
+.header{position:absolute;left:0;right:0;top:6vh;text-align:center}
+.title-line{display:block;color:#fff;font-size:60rpx;font-family:'STXinwei','华文新魏','KaiTi','STKaiti','Noto Serif SC',serif;text-shadow:0 4rpx 8rpx rgba(0,0,0,.6),0 -2rpx 0 rgba(255,255,255,.25);line-height:1.8}
+.content{position:absolute;left:0;right:0;top:26vh;bottom:0;padding:0 40rpx}
+.card{margin-bottom:28rpx;padding:28rpx;background:rgba(0,0,0,0.35);border-radius:18rpx;box-shadow:0 6rpx 14rpx rgba(0,0,0,.25)}
+.section-title{display:block;color:#fff;font-size:44rpx;margin-bottom:18rpx;font-family:'KaiTi','STKaiti','Kaiti SC','Noto Serif SC',serif;text-shadow:0 3rpx 6rpx rgba(0,0,0,.5)}
+.input{background:rgba(255,255,255,0.92);border-radius:10rpx;padding:18rpx 22rpx;margin-bottom:18rpx}
+.flex1{flex:1}
+.row{display:flex;align-items:center;gap:16rpx}
+.btn{background:#b58863;color:#fff;border-radius:10rpx;padding:16rpx 22rpx}

@@ -1,0 +1,17 @@
+<view class="container">
+  <!-- 背景图 -->
+  <image class="bg" src="{{bgPath}}" mode="aspectFill"></image>
+  <view class="overlay"></view>
+
+  <!-- 中部两行主标题 -->
+  <view class="center">
+    <text class="title-line">德技双馨</text>
+    <text class="title-line">手脑并用</text>
+  </view>
+
+  <!-- 底部两行说明与倒计时 -->
+  <view class="bottom">
+    <text class="desc">——欢迎使用毕业设计论文选题管理系统——</text>
+    <text class="count">——{{seconds}}秒后进入登陆界面——</text>
+  </view>
+</view>

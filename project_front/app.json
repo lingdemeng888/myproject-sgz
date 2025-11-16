@@ -1,0 +1,55 @@
+{
+  "pages": [
+    "pages/splash/index"
+  ],
+  "subpackages": [
+    {
+      "root": "pages/auth",
+      "name": "authPkg",
+      "pages": [
+        "identity/index",
+        "teacher/index"
+      ]
+    },
+    {
+      "root": "pages/student",
+      "name": "studentPkg",
+      "pages": [
+        "login/index",
+        "register/index"
+      ]
+    },
+    {
+      "root": "pages/tutor",
+      "name": "tutorPkg",
+      "pages": [
+        "login/index",
+        "register/index"
+      ]
+    },
+    {
+      "root": "pages/admin",
+      "name": "adminPkg",
+      "pages": [
+        "login/index"
+      ]
+    }
+  ],
+  "preloadRule": {
+    "pages/splash/index": {
+      "packages": ["authPkg"],
+      "network": "all"
+    },
+    "pages/auth/identity/index": {
+      "packages": ["studentPkg", "tutorPkg", "adminPkg"],
+      "network": "all"
+    }
+  },
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundTextStyle": "light",
+    "backgroundColor": "#000000",
+    "enablePullDownRefresh": false
+  },
+  "sitemapLocation": "sitemap.json"
+}
