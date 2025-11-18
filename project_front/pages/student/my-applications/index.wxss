@@ -1,0 +1,15 @@
+@import '../../../styles/common.wxss';
+
+.page{min-height:100vh;background:#f7f7f5;padding:28rpx}
+.tabs{display:flex;gap:12rpx;margin-bottom:20rpx;flex-wrap:wrap}
+.tab{flex:1 0 auto;padding:16rpx 20rpx;text-align:center;border-radius:999px;background:#fff;color:#666;font-size:24rpx;box-shadow:0 4rpx 12rpx rgba(0,0,0,0.05)}
+.tab.active{background:#b58863;color:#fff;font-weight:600}
+.card{background:#fff;border-radius:22rpx;padding:24rpx;margin-bottom:20rpx;box-shadow:0 8rpx 20rpx rgba(0,0,0,0.06)}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10rpx}
+.title{font-size:30rpx;font-weight:600;color:#333;margin-right:12rpx}
+.status{font-size:24rpx;font-weight:600}
+.meta{font-size:24rpx;color:#777;margin-bottom:6rpx}
+.reason{font-size:26rpx;color:#444;margin-top:8rpx}
+.comment{font-size:24rpx;color:#b36a6a;margin-top:6rpx;white-space:pre-line}
+.empty{text-align:center;color:#aaa;margin-top:60rpx}
+.loading{text-align:center;color:#888;margin:20rpx 0}

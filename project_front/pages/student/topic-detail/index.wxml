@@ -1,0 +1,30 @@
+<view class="page" wx:if="{{detail}}">
+  <view class="card">
+    <view class="title">{{detail.title}}</view>
+    <view class="meta">导师：{{detail.tutor_name}}</view>
+    <view class="meta">专业：{{detail.major_name}} · 学年：{{detail.academic_year}} · {{termName}}</view>
+    <view class="meta">名额：{{detail.current_students}} / {{detail.max_students}} · 可选 {{detail.available_slots || (detail.max_students - detail.current_students)}} 人</view>
+    <view class="desc">{{detail.description}}</view>
+  </view>
+
+  <view class="card">
+    <view class="section-header">
+      <text>我的申请状态</text>
+      <text class="status-text" style="color: {{applicationStatus.color}}">{{applicationStatus.text}}</text>
+    </view>
+    <view class="status-desc">{{applicationStatus.desc}}</view>
+  </view>
+
+  <view class="card">
+    <view class="section-header">
+      <text>申请理由</text>
+      <text class="hint">10-500 字</text>
+    </view>
+    <textarea class="textarea" placeholder="说明你选择该课题的理由、准备情况等" value="{{reason}}" bindinput="onReasonInput" maxlength="500"></textarea>
+    <button class="btn" type="primary" loading="{{submitting}}" disabled="{{!canApply || submitting}}" bindtap="submitApplication">{{canApply ? '提交申请' : '暂不可申请'}}</button>
+  </view>
+</view>
+
+<view class="empty" wx:else>
+  正在加载选题信息...
+</view>

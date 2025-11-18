@@ -1,0 +1,62 @@
+<view class="home">
+  <view class="hero">
+    <view class="hero-text">
+      <text class="hello">你好，{{userInfo.real_name || '同学'}}</text>
+      <text class="meta">学号：{{userInfo.student_no || '未登记'}} · 专业：{{majorLabel}}</text>
+    </view>
+    <view class="actions">
+      <button class="mini-btn" size="mini" bindtap="refreshData" loading="{{loading}}">刷新</button>
+    </view>
+  </view>
+
+  <view class="quick-grid">
+    <view class="quick-card" bindtap="goTopicList">
+      <text class="quick-badge">选</text>
+      <text>浏览选题</text>
+    </view>
+    <view class="quick-card" bindtap="goApplications">
+      <text class="quick-badge">申</text>
+      <text>我的申请</text>
+    </view>
+    <view class="quick-card" bindtap="goPapers">
+      <text class="quick-badge">论</text>
+      <text>我的论文</text>
+    </view>
+    <view class="quick-card" bindtap="goProfile">
+      <text class="quick-badge">我</text>
+      <text>个人中心</text>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">最近申请</text>
+      <text class="section-link" bindtap="goApplications">查看全部</text>
+    </view>
+    <block wx:if="{{recentApplications.length}}">
+      <view class="card" wx:for="{{recentApplications}}" wx:key="id">
+        <view class="card-title">{{item.topic_title}}</view>
+        <view class="card-meta">提交时间：{{item.created_at_fmt}}</view>
+        <view class="status-pill" style="background: {{item.status_color}}">{{item.status_name}}</view>
+        <view class="card-desc" wx:if="{{item.decision_comment}}">导师意见：{{item.decision_comment}}</view>
+      </view>
+    </block>
+    <view class="empty" wx:else>暂无申请记录，去浏览选题吧～</view>
+  </view>
+
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">最近论文</text>
+      <text class="section-link" bindtap="goPapers">查看全部</text>
+    </view>
+    <block wx:if="{{recentPapers.length}}">
+      <view class="card" wx:for="{{recentPapers}}" wx:key="id" bindtap="goPaperDetail" data-id="{{item.id}}">
+        <view class="card-title">{{item.title}}</view>
+        <view class="card-meta">{{item.academic_year}} · {{item.term_name}}</view>
+        <view class="status-pill" style="background: {{item.status_color}}">{{item.status_name}}</view>
+        <view class="card-desc">版本数：{{item.version_count || 0}} · 最新版本：{{item.latest_version_no || '-'}}号</view>
+      </view>
+    </block>
+    <view class="empty" wx:else>暂无论文记录，待选题通过后即可创建论文。</view>
+  </view>
+</view>

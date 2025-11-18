@@ -2,7 +2,7 @@
 
 当前包含：
 - 启动倒计时页面（校园背景、两行口号、底部欢迎与 5→1 倒计时，结束后自动进入身份选择）
-- 身份选择页（学生/教师）与教师二级选择页（导师/管理员）
+- 身份选择页（学生/导师/管理员）
 - 学生/导师/管理员登录页；学生/导师注册页（登录页提供“无账号？前去注册！”入口）
 
 字体与视觉：
@@ -17,7 +17,7 @@ pages: [
    "pages/splash/index"
 ]
 subpackages: [
-   { root: "pages/auth",   pages: ["identity/index", "teacher/index"] },
+   { root: "pages/auth",   pages: ["identity/index"] },
    { root: "pages/student", pages: ["login/index", "register/index"] },
    { root: "pages/tutor",   pages: ["login/index", "register/index"] },
    { root: "pages/admin",   pages: ["login/index"] }
@@ -69,7 +69,6 @@ Move-Item -Force .\assets\images\校园景观.out.jpg .\assets\images\校园景�
 ├─ pages
 │  ├─ splash/                 # 主包
 │  ├─ auth/identity/          # 分包 auth
-│  ├─ auth/teacher/
 │  ├─ student/login/          # 分包 student
 │  ├─ student/register/
 │  ├─ tutor/login/            # 分包 tutor

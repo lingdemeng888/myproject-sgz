@@ -1,0 +1,28 @@
+<view class="page">
+  <view class="filters">
+    <input class="input" placeholder="学年（例如 2024-2025）" value="{{filters.academic_year}}" bindinput="onYearInput" />
+    <picker mode="selector" range="{{termOptions}}" range-key="label" value="{{termIndex}}" bindchange="onTermChange">
+      <view class="picker">{{termOptions[termIndex].label}}</view>
+    </picker>
+    <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusIndex}}" bindchange="onStatusChange">
+      <view class="picker">{{statusOptions[statusIndex].label}}</view>
+    </picker>
+    <button class="btn" size="mini" bindtap="applyFilters">筛选</button>
+  </view>
+
+  <block wx:if="{{papers.length}}">
+    <view class="card" wx:for="{{papers}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="card-header">
+        <text class="title">{{item.title}}</text>
+        <text class="status" style="color: {{item.status_color}}">{{item.status_name}}</text>
+      </view>
+      <view class="meta">选题：{{item.topic_title}}</view>
+      <view class="meta">{{item.academic_year}} · {{item.term_name}}</view>
+      <view class="meta">版本：{{item.version_count || 0}} 个 · 最新：{{item.latest_version_no || '-'}} 号</view>
+    </view>
+  </block>
+  <view class="empty" wx:else>暂无论文记录</view>
+
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+  <view class="loading" wx:elif="{{!hasMore && papers.length}}">没有更多了</view>
+</view>

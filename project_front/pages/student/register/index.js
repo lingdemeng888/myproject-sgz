@@ -1,25 +1,141 @@
-const { genCode, maskPhone } = require('../../../utils/mock');
+const { get, post } = require('../../../utils/request');
 
 Page({
-  data:{ no:'', name:'', clazz:'', phone:'', code:'', sent:'', pwd1:'', pwd2:'', a:0, b:0, va:'' },
-  onLoad(){ this.refreshQA(); },
-  refreshQA(){ const a=Math.floor(10+Math.random()*90), b=Math.floor(10+Math.random()*90); this.setData({ a,b }); },
-  onNo(e){ this.setData({ no:e.detail.value }); },
-  onName(e){ this.setData({ name:e.detail.value }); },
-  onClazz(e){ this.setData({ clazz:e.detail.value }); },
-  onPhone(e){ this.setData({ phone:e.detail.value }); },
-  onCode(e){ this.setData({ code:e.detail.value }); },
-  onPwd1(e){ this.setData({ pwd1:e.detail.value }); },
-  onPwd2(e){ this.setData({ pwd2:e.detail.value }); },
-  onVA(e){ this.setData({ va:e.detail.value }); },
-  sendCode(){ if(!this.data.phone) return wx.showToast({ title:'请输入手机号', icon:'none' }); const c=genCode(); this.setData({ sent:c }); wx.showToast({ title:`验证码已发送到 ${maskPhone(this.data.phone)}`, icon:'none' }); },
-  submit(){
-    const {no,name,clazz,phone,code,sent,pwd1,pwd2,a,b,va}=this.data;
-    if(!(no&&name&&clazz&&phone&&pwd1&&pwd2&&code)) return wx.showToast({ title:'请完善注册信息', icon:'none' });
-    if(pwd1!==pwd2) return wx.showToast({ title:'两次密码不一致', icon:'none' });
-    if(code!==sent) return wx.showToast({ title:'验证码错误', icon:'none' });
-    if(Number(va)!==a+b) return wx.showToast({ title:'安全验证未通过', icon:'none' });
-    wx.showModal({ title:'注册结果', content:'恭喜您注册成功（示例）', showCancel:false });
+  data: {
+    no: '',
+    name: '',
+    phone: '',
+    email: '',
+    pwd1: '',
+    pwd2: '',
+    primaryMajorId: null,
+    selectedMajorName: '',
+    majorOptions: [],
+    majorIndex: 0,
+    majorsLoading: false,
+    submitting: false
   },
-  backToLogin(){ wx.navigateBack(); }
+
+  onLoad() {
+    this.fetchMajors();
+  },
+
+  onFieldInput(e) {
+    const { field } = e.currentTarget.dataset;
+    if (!field) return;
+    this.setData({ [field]: e.detail.value });
+  },
+
+  async fetchMajors() {
+    this.setData({ majorsLoading: true });
+    try {
+      const res = await get(
+        '/majors',
+        { page: 1, page_size: 100, status: 1 },
+        { showLoading: false, showError: false, requireAuth: false, autoRedirectOn401: false }
+      );
+      const options = Array.isArray(res?.items) ? res.items : [];
+      const nextState = {
+        majorOptions: options,
+        majorsLoading: false
+      };
+      if (!this.data.primaryMajorId && options.length > 0) {
+        nextState.primaryMajorId = options[0].id;
+        nextState.selectedMajorName = options[0].name;
+        nextState.majorIndex = 0;
+      }
+      this.setData(nextState);
+    } catch (error) {
+      console.error('获取专业列表失败', error);
+      this.setData({ majorsLoading: false });
+      wx.showToast({ title: '无法获取专业列表', icon: 'none' });
+    }
+  },
+
+  onMajorChange(e) {
+    const index = Number(e.detail.value);
+    const major = this.data.majorOptions[index];
+    if (!major) return;
+    this.setData({
+      majorIndex: index,
+      primaryMajorId: major.id,
+      selectedMajorName: major.name
+    });
+  },
+
+  validate() {
+    const { no, name, phone, email, pwd1, pwd2, primaryMajorId } = this.data;
+    if (!no.trim()) {
+      wx.showToast({ title: '请输入学号', icon: 'none' });
+      return false;
+    }
+    if (!name.trim()) {
+      wx.showToast({ title: '请输入姓名', icon: 'none' });
+      return false;
+    }
+    if (!/^1[3-9]\d{9}$/.test(phone.trim())) {
+      wx.showToast({ title: '请输入有效手机号', icon: 'none' });
+      return false;
+    }
+    const mail = email.trim();
+    if (!mail) {
+      wx.showToast({ title: '请输入邮箱', icon: 'none' });
+      return false;
+    }
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(mail)) {
+      wx.showToast({ title: '请输入有效邮箱', icon: 'none' });
+      return false;
+    }
+    if (pwd1.length < 6) {
+      wx.showToast({ title: '密码至少6位', icon: 'none' });
+      return false;
+    }
+    if (pwd1 !== pwd2) {
+      wx.showToast({ title: '两次密码不一致', icon: 'none' });
+      return false;
+    }
+    if (!primaryMajorId) {
+      wx.showToast({ title: '请选择专业', icon: 'none' });
+      return false;
+    }
+    return true;
+  },
+
+  submit() {
+    if (!this.validate()) return;
+    const { no, name, phone, email, pwd1, primaryMajorId } = this.data;
+    const trimmedNo = no.trim();
+    const payload = {
+      username: trimmedNo,
+      real_name: name.trim(),
+      student_no: trimmedNo,
+      phone: phone.trim(),
+      email: email.trim(),
+      password: pwd1,
+      primary_major_id: primaryMajorId
+    };
+    this.setData({ submitting: true });
+    post('/auth/register/student', payload, { showLoading: true })
+      .then(() => {
+        wx.showModal({
+          title: '注册成功',
+          content: '账户已创建，请使用学号作为用户名登录。',
+          showCancel: false,
+          success: () => {
+            this.backToLogin();
+          }
+        });
+      })
+      .catch(error => {
+        console.error('学生注册失败', error);
+      })
+      .finally(() => {
+        this.setData({ submitting: false });
+      });
+  },
+
+  backToLogin() {
+    wx.navigateBack();
+  }
 });

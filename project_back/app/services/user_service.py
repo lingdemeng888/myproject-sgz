@@ -61,7 +61,18 @@ class UserService:
         if major.status != 1:
             raise BusinessException(f"主修专业已被禁用，无法注册")
         
-        # 2. 查询STUDENT角色
+        # 2. 验证院系是否存在且启用
+        stmt = select(Department).where(Department.id == major.department_id)
+        result = db.execute(stmt)
+        department = result.scalar_one_or_none()
+
+        if not department:
+            raise BusinessException(f"主修专业所属院系不存在（ID: {major.department_id}）")
+
+        if department.status != 1:
+            raise BusinessException("主修专业所属院系已被禁用，无法注册")
+
+        # 3. 查询STUDENT角色
         stmt = select(Role).where(Role.role_key == 'STUDENT')
         result = db.execute(stmt)
         student_role = result.scalar_one_or_none()
@@ -69,11 +80,11 @@ class UserService:
         if not student_role:
             raise BusinessException("系统角色配置错误：缺少STUDENT角色")
         
-        # 3. 生成盐值和密码哈希
+        # 4. 生成盐值和密码哈希
         salt = generate_salt()
         password_hash = hash_password(request.password, salt)
         
-        # 4. 创建用户对象
+        # 5. 创建用户对象
         user = User(
             username=request.username,
             real_name=request.real_name,
@@ -83,13 +94,14 @@ class UserService:
             password_hash=password_hash,
             password_salt=salt,
             primary_major_id=request.primary_major_id,
+            department_id=department.id,
             status=1
         )
         
-        # 5. 分配STUDENT角色
+        # 6. 分配STUDENT角色
         user.roles.append(student_role)
         
-        # 6. 保存到数据库
+        # 7. 保存到数据库
         try:
             db.add(user)
             db.commit()

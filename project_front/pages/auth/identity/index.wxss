@@ -5,6 +5,8 @@
 .overlay{ position:absolute; inset:0; background:rgba(0,0,0,0.25); }
 .header{ position:absolute; left:0; right:0; top:8vh; text-align:center; }
 .title-line{ display:block; color:#fff; font-size:60rpx; font-family:'STXinwei','华文新魏','KaiTi','STKaiti','Noto Serif SC',serif; text-shadow:0 4rpx 8rpx rgba(0,0,0,0.6),0 -2rpx 0 rgba(255,255,255,0.25); line-height:1.8; }
-.options{ position:absolute; left:0; right:0; bottom:18vh; display:flex; flex-direction:column; gap:28rpx; align-items:center; }
-.option{ width:72vw; padding:26rpx 32rpx; background:rgba(181,136,99,0.7); border-radius:16rpx; box-shadow:0 6rpx 14rpx rgba(0,0,0,0.25); }
-.option-text{ text-align:center; color:#fff; font-size:60rpx; font-family:'KaiTi','STKaiti','Kaiti SC','Noto Serif SC',serif; text-shadow:0 3rpx 6rpx rgba(0,0,0,0.5); }
+.options{ position:absolute; left:0; right:0; bottom:12vh; display:flex; flex-direction:column; gap:24rpx; align-items:center; }
+.option{ width:72vw; padding:32rpx 40rpx; background:rgba(181,136,99,0.75); border-radius:16rpx; box-shadow:0 6rpx 14rpx rgba(0,0,0,0.3); display:flex; flex-direction:column; align-items:center; transition: all 0.3s ease; }
+.option:active{ transform: scale(0.96); background:rgba(181,136,99,0.85); }
+.option-text{ text-align:center; color:#fff; font-size:56rpx; font-family:'KaiTi','STKaiti','Kaiti SC','Noto Serif SC',serif; text-shadow:0 3rpx 6rpx rgba(0,0,0,0.5); margin-bottom:8rpx; }
+.option-desc{ text-align:center; color:rgba(255,255,255,0.85); font-size:24rpx; text-shadow:0 2rpx 4rpx rgba(0,0,0,0.5); }

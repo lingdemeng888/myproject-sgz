@@ -8,7 +8,7 @@ from app.schemas.response import ApiResponse
 from app.schemas.topic import TopicCreateRequest, TopicUpdateRequest, TopicListQuery, TopicResponse, TopicListResponse
 from app.services.topic_service import TopicService
 
-router = APIRouter(prefix="/topics", tags=["选题管理"])
+router = APIRouter(prefix="/tutor/topics", tags=["导师-选题管理"])
 
 
 @router.post("", response_model=ApiResponse[TopicResponse], summary="创建选题")

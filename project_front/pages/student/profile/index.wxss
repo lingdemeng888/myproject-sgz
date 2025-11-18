@@ -1,0 +1,14 @@
+@import '../../../styles/common.wxss';
+
+.page{min-height:100vh;background:#f7f7f5;padding:32rpx;box-sizing:border-box}
+.card{background:#fff;border-radius:24rpx;padding:32rpx;text-align:center;box-shadow:0 12rpx 28rpx rgba(0,0,0,0.08);margin-bottom:24rpx}
+.avatar{width:140rpx;height:140rpx;border-radius:50%;background:#b58863;color:#fff;font-size:60rpx;display:flex;align-items:center;justify-content:center;margin:0 auto 18rpx}
+.name{font-size:36rpx;font-weight:600;color:#333;margin-bottom:6rpx}
+.role{font-size:26rpx;color:#666}
+.info-card{background:#fff;border-radius:24rpx;padding:24rpx;box-shadow:0 8rpx 20rpx rgba(0,0,0,0.06);margin-bottom:32rpx}
+.info-item{display:flex;justify-content:space-between;padding:18rpx 0;border-bottom:1px solid #f2f2f2;font-size:26rpx;color:#444}
+.info-item:last-child{border-bottom:none}
+.label{color:#888}
+.value{color:#333}
+.btn{width:100%;border-radius:18rpx}
+.empty{text-align:center;color:#999;padding:40rpx}

@@ -1,29 +1,86 @@
-<view class="container">
-  <image class="bg" src="../assets/乐技楼.jpg" mode="aspectFill"></image>
+<view class="page">
+  <image class="bg" src="../assets/乐技楼.jpg" mode="aspectFill" />
   <view class="overlay"></view>
 
-  <view class="header">
-    <text class="title-line">苏州高等职业技术学校</text>
-    <text class="title-line">毕业设计选题管理系统</text>
+  <view class="top-actions">
+    <view class="back-chip" bindtap="goIdentitySelect">
+      <text class="back-icon">←</text>
+      <text class="back-text">返回身份选择</text>
+    </view>
   </view>
 
-  <scroll-view class="content" scroll-y>
-    <!-- 登录卡片 -->
-    <view class="card">
-      <text class="section-title">学生登录</text>
+  <view class="hero">
+    <text class="hero-line">苏州高等职业技术学校</text>
+    <text class="hero-line">毕业设计选题管理系统</text>
+    <view class="role-chip">
+      <text>学生登录</text>
+    </view>
+    <text class="hero-tip">学籍核验 · 选题申请 · 论文提交</text>
+  </view>
 
-      <input class="input" placeholder="学号/手机号" bindinput="onChangeId"/>
-      <view class="row">
-        <input class="input flex1" password placeholder="密码" bindinput="onChangePwd"/>
-        <button class="btn btn-primary" size="mini" bindtap="sendCode" disabled="{{!canSend}}">发送验证码</button>
+  <view class="login-card">
+    <view class="card-head">
+      <text class="card-title">学生身份认证</text>
+      <text class="card-desc">请使用学号与统一密码登录系统</text>
+    </view>
+
+    <view class="input-group">
+      <text class="input-icon">👤</text>
+      <input
+        class="input-field"
+        type="text"
+        placeholder="请输入学号"
+        value="{{username}}"
+        bindinput="onUsernameInput"
+        placeholder-class="input-placeholder"
+      />
+    </view>
+
+    <view class="input-group">
+      <text class="input-icon">🔒</text>
+      <input
+        class="input-field"
+        type="{{showPassword ? 'text' : 'password'}}"
+        placeholder="请输入密码"
+        value="{{password}}"
+        bindinput="onPasswordInput"
+        placeholder-class="input-placeholder"
+      />
+      <text class="eye-icon" bindtap="togglePassword">
+        {{showPassword ? '👁️' : '👁️‍🗨️'}}
+      </text>
+    </view>
+
+    <view class="helper-row">
+      <view class="checkbox-group" bindtap="toggleRemember">
+        <view class="checkbox {{rememberMe ? 'checked' : ''}}">
+          <text wx:if="{{rememberMe}}">✓</text>
+        </view>
+        <text class="checkbox-label">记住登录信息</text>
       </view>
-      <input class="input" placeholder="验证码（6位）" maxlength="6" bindinput="onChangeCode"/>
-      <button class="btn btn-primary" bindtap="login">登陆学生端主页</button>
+      <text class="link-text" bindtap="goForgotPassword">忘记密码？</text>
     </view>
 
-    <!-- 注册引导盒子 -->
-    <view class="register-box" bindtap="toRegister">
-      无账号？前去注册！
+    <button
+      class="primary-btn {{loading ? 'disabled' : ''}}"
+      bindtap="handleLogin"
+      disabled="{{loading}}"
+      loading="{{loading}}"
+    >
+      {{loading ? '登录中...' : '进入系统'}}
+    </button>
+
+    <view class="divider"></view>
+
+    <view class="link-row">
+      <text class="hint-text">首次使用？</text>
+      <text class="link-text" bindtap="goRegister">立即注册</text>
     </view>
-  </scroll-view>
+  </view>
+
+  <view class="corner-dots">
+    <view class="dot"></view>
+    <view class="dot"></view>
+    <view class="dot"></view>
+  </view>
 </view>

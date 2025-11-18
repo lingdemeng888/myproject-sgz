@@ -8,11 +8,17 @@
   </view>
 
   <view class="options">
-    <view class="option" bindtap="goTeacherOrAdmin">
-      <text class="option-text">我是教师</text>
-    </view>
     <view class="option" bindtap="goStudent">
       <text class="option-text">我是学生</text>
+      <text class="option-desc">浏览选题 · 申请选题 · 提交论文</text>
+    </view>
+    <view class="option" bindtap="goTutor">
+      <text class="option-text">我是导师</text>
+      <text class="option-desc">发布选题 · 审批申请 · 指导学生</text>
+    </view>
+    <view class="option" bindtap="goAdmin">
+      <text class="option-text">我是管理员</text>
+      <text class="option-desc">用户管理 · 系统配置 · 数据维护</text>
     </view>
   </view>
 </view>

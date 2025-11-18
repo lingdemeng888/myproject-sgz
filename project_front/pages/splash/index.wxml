@@ -3,6 +3,11 @@
   <image class="bg" src="{{bgPath}}" mode="aspectFill"></image>
   <view class="overlay"></view>
 
+  <!-- 右上角跳过按钮 -->
+  <view class="skip-btn" bindtap="skip">
+    <text>跳过 {{seconds}}s</text>
+  </view>
+
   <!-- 中部两行主标题 -->
   <view class="center">
     <text class="title-line">德技双馨</text>

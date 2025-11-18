@@ -1,0 +1,35 @@
+<view class="page" wx:if="{{paper}}">
+  <view class="card">
+    <view class="title">{{paper.title}}</view>
+    <view class="meta">选题：{{paper.topic_title}}</view>
+    <view class="meta">学年：{{paper.academic_year}} · {{paper.term_name}}</view>
+    <view class="meta">状态：<text class="status" style="color: {{paper.status_color}}">{{paper.status_name}}</text></view>
+    <view class="meta" wx:if="{{paper.submitted_at}}">提交时间：{{paper.submitted_at_fmt}}</view>
+    <view class="meta">创建时间：{{paper.created_at_fmt}}</view>
+    <view class="desc" wx:if="{{paper.abstract}}">摘要：{{paper.abstract}}</view>
+    <view class="desc" wx:if="{{paper.keywords}}">关键词：{{paper.keywords}}</view>
+  </view>
+
+  <view class="card">
+    <view class="section-header">
+      <text>版本记录（共 {{paper.versions.length}} 个）</text>
+      <button class="mini-btn" size="mini" bindtap="goAddVersion">新增版本</button>
+    </view>
+    <block wx:if="{{paper.versions.length}}">
+      <view class="version" wx:for="{{paper.versions}}" wx:key="id">
+        <view class="version-header">
+          <text>v{{item.version_no}} · {{item.content_format_name}}</text>
+          <text class="time">{{item.submitted_at_fmt}}</text>
+        </view>
+        <view class="version-notes">{{item.notes || '无备注'}}</view>
+      </view>
+    </block>
+    <view class="empty" wx:else>还没有版本，先新增一个版本再提交论文。</view>
+  </view>
+
+  <button class="btn" type="primary" bindtap="submitPaper" disabled="{{!canSubmit}}" loading="{{submitting}}">
+    {{canSubmit ? '提交论文' : '当前状态不可提交'}}
+  </button>
+</view>
+
+<view class="empty" wx:else>正在加载论文信息...</view>

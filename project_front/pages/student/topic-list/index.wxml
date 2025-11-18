@@ -1,0 +1,23 @@
+<view class="page">
+  <view class="search-bar">
+    <input class="search-input" placeholder="输入关键字搜索选题" value="{{keyword}}" bindinput="onKeywordInput" confirm-type="search" bindconfirm="onSearch" />
+    <button size="mini" class="search-btn" bindtap="onSearch">搜索</button>
+  </view>
+  <view class="hint">显示与当前专业匹配的发布选题，可滑动加载更多。</view>
+
+  <block wx:if="{{topics.length}}">
+    <view class="topic-card" wx:for="{{topics}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="card-header">
+        <text class="title">{{item.title}}</text>
+        <text class="slots">余 {{item.available_slots}} / {{item.max_students}}</text>
+      </view>
+      <view class="meta">导师：{{item.tutor_name}} · 专业：{{item.major_name}}</view>
+      <view class="meta">学年：{{item.academic_year}} · {{item.term_name}}</view>
+      <view class="desc">{{item.description}}</view>
+    </view>
+  </block>
+  <view class="empty" wx:else>暂时没有符合条件的选题，稍后再来看看。</view>
+
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+  <view class="loading" wx:elif="{{!hasMore && topics.length}}">没有更多了</view>
+</view>

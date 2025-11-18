@@ -1,0 +1,26 @@
+<view class="page">
+  <view class="tabs">
+    <view class="tab {{activeStatus === '' ? 'active' : ''}}" data-value="" bindtap="changeStatus">全部</view>
+    <view class="tab {{activeStatus === 0 ? 'active' : ''}}" data-value="0" bindtap="changeStatus">待审批</view>
+    <view class="tab {{activeStatus === 1 ? 'active' : ''}}" data-value="1" bindtap="changeStatus">已通过</view>
+    <view class="tab {{activeStatus === 2 ? 'active' : ''}}" data-value="2" bindtap="changeStatus">已拒绝</view>
+    <view class="tab {{activeStatus === 3 ? 'active' : ''}}" data-value="3" bindtap="changeStatus">已取消</view>
+  </view>
+
+  <block wx:if="{{applications.length}}">
+    <view class="card" wx:for="{{applications}}" wx:key="id" bindtap="showDetail" data-index="{{index}}">
+      <view class="card-header">
+        <text class="title">{{item.topic_title}}</text>
+        <text class="status" style="color: {{item.status_color}}">{{item.status_name}}</text>
+      </view>
+      <view class="meta">提交时间：{{item.created_at_fmt}}</view>
+      <view class="meta" wx:if="{{item.decision_by_name}}">审批人：{{item.decision_by_name}}</view>
+      <view class="reason">{{item.application_reason || '未填写申请理由'}}</view>
+      <view class="comment" wx:if="{{item.decision_comment}}">导师意见：{{item.decision_comment}}</view>
+    </view>
+  </block>
+  <view class="empty" wx:else>暂无申请记录</view>
+
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+  <view class="loading" wx:elif="{{!hasMore && applications.length}}">没有更多了</view>
+</view>

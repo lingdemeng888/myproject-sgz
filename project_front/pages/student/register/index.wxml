@@ -1,34 +1,77 @@
-<view class="container">
-  <image class="bg" src="../assets/乐技楼.jpg" mode="aspectFill"></image>
+<view class="page">
+  <image class="bg" src="../assets/乐技楼.jpg" mode="aspectFill" />
   <view class="overlay"></view>
 
-  <view class="header">
-    <text class="title-line">苏州高等职业技术学校</text>
-    <text class="title-line">毕业设计选题管理系统</text>
+  <view class="hero">
+    <text class="hero-line">苏州高等职业技术学校</text>
+    <text class="hero-line">毕业设计选题管理系统</text>
+    <view class="role-chip">
+      <text>学生注册</text>
+    </view>
+    <text class="hero-tip">实名登记 · 学籍绑定 · 安全开通</text>
   </view>
 
-  <scroll-view class="content" scroll-y>
-    <view class="card">
-      <text class="section-title">学生注册</text>
-      <input class="input" placeholder="学号" bindinput="onNo"/>
-      <input class="input" placeholder="姓名" bindinput="onName"/>
-      <input class="input" placeholder="班级全称" bindinput="onClazz"/>
-      <view class="row">
-        <input class="input flex1" placeholder="绑定手机号" bindinput="onPhone"/>
-        <button class="btn btn-primary" size="mini" bindtap="sendCode">发送验证码</button>
-      </view>
-      <input class="input" placeholder="验证码（6位）" maxlength="6" bindinput="onCode"/>
-      <input class="input" password placeholder="设置密码" bindinput="onPwd1"/>
-      <input class="input" password placeholder="再次输入密码" bindinput="onPwd2"/>
-
-      <view class="card small-verify">
-        <text class="section-title">个人安全验证</text>
-        <text class="text-white">请计算：{{a}} + {{b}} = ？</text>
-        <input class="input" placeholder="请输入结果" bindinput="onVA"/>
+  <scroll-view class="form-scroll" scroll-y>
+    <view class="form-card">
+      <view class="card-head">
+        <text class="card-title">开通学生账号</text>
+        <text class="card-desc">请填写真实学籍信息与联系方式</text>
       </view>
 
-      <button class="btn btn-primary" bindtap="submit">提交注册</button>
-      <view class="register-box" bindtap="backToLogin">已有账号？去登录</view>
+      <view class="input-group">
+        <text class="input-icon">🎓</text>
+        <input class="input-field" placeholder="学号" value="{{no}}" data-field="no" bindinput="onFieldInput" />
+      </view>
+
+      <view class="input-group">
+        <text class="input-icon">🧑‍🎓</text>
+        <input class="input-field" placeholder="姓名" value="{{name}}" data-field="name" bindinput="onFieldInput" />
+      </view>
+
+      <view class="input-group picker-group">
+        <text class="input-icon">🏫</text>
+        <picker class="picker-field" mode="selector" range="{{majorOptions}}" range-key="name" value="{{majorIndex}}" bindchange="onMajorChange">
+          <view class="picker-text">{{selectedMajorName || '请选择所属专业'}}</view>
+        </picker>
+      </view>
+      <text class="helper-hint">仅展示已开放注册的专业，如有疑问请联系教务老师</text>
+
+      <view class="input-group">
+        <text class="input-icon">📱</text>
+        <input class="input-field" type="number" maxlength="11" placeholder="手机号" value="{{phone}}" data-field="phone" bindinput="onFieldInput" />
+      </view>
+      <text class="helper-hint">手机号仅用于身份核验与找回密码</text>
+
+      <view class="input-group">
+        <text class="input-icon">✉️</text>
+        <input class="input-field" type="text" placeholder="邮箱" value="{{email}}" data-field="email" bindinput="onFieldInput" />
+      </view>
+      <text class="helper-hint">邮箱将用于接收系统通知及密码找回</text>
+
+      <view class="input-group">
+        <text class="input-icon">🔒</text>
+        <input class="input-field" password placeholder="设置登录密码（至少6位）" value="{{pwd1}}" data-field="pwd1" bindinput="onFieldInput" />
+      </view>
+
+      <view class="input-group">
+        <text class="input-icon">✅</text>
+        <input class="input-field" password placeholder="再次输入密码" value="{{pwd2}}" data-field="pwd2" bindinput="onFieldInput" />
+      </view>
+
+      <button class="primary-btn" bindtap="submit" loading="{{submitting}}" disabled="{{submitting}}">
+        {{submitting ? '提交中...' : '提交注册'}}
+      </button>
+
+      <view class="link-row">
+        <text class="hint-text">已有账号？</text>
+        <text class="link-text" bindtap="backToLogin">返回登录</text>
+      </view>
     </view>
   </scroll-view>
+
+  <view class="corner-dots">
+    <view class="dot"></view>
+    <view class="dot"></view>
+    <view class="dot"></view>
+  </view>
 </view>

@@ -5,8 +5,7 @@ from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_user
-from app.core.exceptions import BusinessException
+from app.core.dependencies import require_roles
 from app.services.paper_service import PaperService
 from app.schemas.paper import (
     PaperReviewRequest,
@@ -28,7 +27,7 @@ def list_student_papers(
     term: int | None = None,
     student_name: str | None = None,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_roles("TUTOR"))
 ):
     """
     导师查询指导学生的论文列表
@@ -40,9 +39,6 @@ def list_student_papers(
     - **term**: 学期筛选，1=上学期，2=下学期（可选）
     - **student_name**: 学生姓名模糊搜索（可选）
     """
-    # 验证导师角色
-    if current_user.role_id != 2:  # 2=导师
-        raise BusinessException(message="只有导师可以访问此接口", code=403)
     
     # 构建查询参数
     query = TutorPaperListQuery(
@@ -68,7 +64,7 @@ def review_paper(
     data: PaperReviewRequest,
     request: Request,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_roles("TUTOR"))
 ):
     """
     导师评审论文
@@ -83,9 +79,6 @@ def review_paper(
     - 待修改（3）→ 评审中（2）/通过（4）
     - 通过（4）→ 不可再评审
     """
-    # 验证导师角色
-    if current_user.role_id != 2:  # 2=导师
-        raise BusinessException(message="只有导师可以评审论文", code=403)
     
     # 获取IP地址
     ip_address = request.client.host if request.client else None
@@ -112,16 +105,13 @@ def review_paper(
 def get_paper_detail(
     paper_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_roles("TUTOR"))
 ):
     """
     导师查看论文详情（含所有版本）
     
     - **paper_id**: 论文ID
     """
-    # 验证导师角色
-    if current_user.role_id != 2:  # 2=导师
-        raise BusinessException(message="只有导师可以访问此接口", code=403)
     
     # 调用服务层
     return PaperService.get_paper_detail_for_tutor(

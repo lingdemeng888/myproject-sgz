@@ -51,3 +51,20 @@
 }
 .desc { display: block; margin-bottom: 12rpx; font-size: 26rpx; }
 .count { display: block; font-size: 26rpx; }
+
+/* 跳过按钮 */
+.skip-btn {
+  position: absolute;
+  top: 60rpx;
+  right: 40rpx;
+  padding: 16rpx 32rpx;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 40rpx;
+  border: 2rpx solid rgba(255, 255, 255, 0.5);
+  z-index: 100;
+}
+.skip-btn text {
+  color: #fff;
+  font-size: 26rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.5);
+}

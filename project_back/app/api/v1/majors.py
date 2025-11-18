@@ -34,8 +34,7 @@ async def list_majors(
     department_id: int = Query(None, gt=0, description="按系部筛选"),
     keyword: str = Query(None, description="搜索关键字"),
     status: int = Query(None, ge=0, le=1, description="状态筛选"),
-    db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    db: Session = Depends(get_db)
 ):
     """专业列表（分页、搜索、筛选）"""
     result = major_service.get_list(db, page, page_size, department_id, keyword, status)

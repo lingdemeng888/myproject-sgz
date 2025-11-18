@@ -7,8 +7,7 @@
       "root": "pages/auth",
       "name": "authPkg",
       "pages": [
-        "identity/index",
-        "teacher/index"
+        "identity/index"
       ]
     },
     {
@@ -16,7 +15,15 @@
       "name": "studentPkg",
       "pages": [
         "login/index",
-        "register/index"
+        "register/index",
+        "home/index",
+        "topic-list/index",
+        "topic-detail/index",
+        "my-applications/index",
+        "my-papers/index",
+        "paper-detail/index",
+        "paper-version-edit/index",
+        "profile/index"
       ]
     },
     {

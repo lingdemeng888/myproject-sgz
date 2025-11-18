@@ -1,0 +1,15 @@
+@import '../../../styles/common.wxss';
+
+.page{min-height:100vh;background:#f7f7f5;padding:32rpx}
+.search-bar{display:flex;gap:16rpx;margin-bottom:16rpx}
+.search-input{flex:1;background:#fff;border-radius:999px;padding:18rpx 24rpx;font-size:28rpx;box-shadow:0 4rpx 14rpx rgba(0,0,0,0.08)}
+.search-btn{background:#b58863;color:#fff;border-radius:999px}
+.hint{font-size:24rpx;color:#999;margin-bottom:20rpx}
+.topic-card{background:#fff;border-radius:24rpx;padding:26rpx;margin-bottom:24rpx;box-shadow:0 10rpx 24rpx rgba(0,0,0,0.06)}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10rpx}
+.title{font-size:32rpx;font-weight:600;color:#333;flex:1;margin-right:12rpx}
+.slots{font-size:26rpx;color:#b58863;font-weight:600}
+.meta{font-size:24rpx;color:#666;margin-bottom:6rpx}
+.desc{font-size:26rpx;color:#444;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.empty{margin-top:60rpx;text-align:center;color:#aaa}
+.loading{text-align:center;color:#888;font-size:24rpx;margin-top:18rpx}

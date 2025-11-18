@@ -1,0 +1,20 @@
+<view class="page">
+  <view class="card">
+    <view class="label">正文内容</view>
+    <textarea class="textarea" placeholder="输入论文正文或阶段内容" value="{{content}}" bindinput="onContentInput" maxlength="5000"></textarea>
+  </view>
+
+  <view class="card">
+    <view class="label">内容格式</view>
+    <picker mode="selector" range="{{formatOptions}}" range-key="label" value="{{formatIndex}}" bindchange="onFormatChange">
+      <view class="picker">{{formatOptions[formatIndex].label}}</view>
+    </picker>
+  </view>
+
+  <view class="card">
+    <view class="label">备注（可选）</view>
+    <textarea class="textarea" placeholder="例如：初稿、修改版等" value="{{notes}}" bindinput="onNotesInput" maxlength="255"></textarea>
+  </view>
+
+  <button class="btn" type="primary" loading="{{saving}}" bindtap="saveVersion">保存版本</button>
+</view>
