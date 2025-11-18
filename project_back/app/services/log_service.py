@@ -52,12 +52,12 @@ class LogService:
             
             # 步骤2：创建日志记录
             log = OperationLog(
-                user_id=user_id,
+                actor_id=user_id,
                 action=action,
-                resource_type=resource_type,
-                resource_id=resource_id,
+                target_table=resource_type,
+                target_id=resource_id,
                 detail=detail_json,
-                ip_address=ip_address
+                ip=ip_address
             )
             
             # 步骤3：提交到数据库
@@ -101,12 +101,12 @@ class LogService:
         """
         # ========== 步骤1：构建基础查询 ==========
         stmt = select(OperationLog).outerjoin(
-            User, OperationLog.user_id == User.id
+            User, OperationLog.actor_id == User.id
         )
         
         # ========== 步骤2：应用用户ID筛选 ==========
         if query.user_id:
-            stmt = stmt.filter(OperationLog.user_id == query.user_id)
+            stmt = stmt.filter(OperationLog.actor_id == query.user_id)
         
         # ========== 步骤3：应用操作类型筛选 ==========
         if query.action:
@@ -114,7 +114,7 @@ class LogService:
         
         # ========== 步骤4：应用资源类型筛选 ==========
         if query.resource_type:
-            stmt = stmt.filter(OperationLog.resource_type == query.resource_type)
+            stmt = stmt.filter(OperationLog.target_table == query.resource_type)
         
         # ========== 步骤5：应用时间范围筛选 ==========
         if query.start_date:
@@ -156,21 +156,21 @@ class LogService:
         # 查询操作人信息
         username = None
         real_name = None
-        if log.user_id:
-            user = db.query(User).filter(User.id == log.user_id).first()
+        if log.actor_id:
+            user = db.query(User).filter(User.id == log.actor_id).first()
             if user:
                 username = user.username
                 real_name = user.real_name
         
         return OperationLogResponse(
             id=log.id,
-            user_id=log.user_id,
+            user_id=log.actor_id,
             username=username,
             real_name=real_name,
             action=log.action,
-            resource_type=log.resource_type,
-            resource_id=log.resource_id,
+            resource_type=log.target_table,
+            resource_id=log.target_id,
             detail=log.detail,
-            ip_address=log.ip_address,
+            ip_address=log.ip,
             created_at=log.created_at
         )

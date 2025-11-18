@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "可申请选题",
-  "enablePullDownRefresh": true
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "back-button": "/components/back-button/index"
+  }
 }

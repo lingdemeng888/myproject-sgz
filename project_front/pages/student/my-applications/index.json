@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "我的申请",
-  "enablePullDownRefresh": true
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "back-button": "/components/back-button/index"
+  }
 }

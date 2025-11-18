@@ -27,8 +27,10 @@ Page({
 
   parseMajor(user) {
     if (!user) return '未设置';
+    // 优先使用专业名称
     if (user.primary_major_name) return user.primary_major_name;
-    if (user.primary_major_id) return `专业ID：${user.primary_major_id}`;
+    // 降级显示ID
+    if (user.primary_major_id) return `专业ID: ${user.primary_major_id}`;
     return '未设置';
   },
 

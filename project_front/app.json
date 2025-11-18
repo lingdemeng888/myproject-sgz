@@ -31,7 +31,14 @@
       "name": "tutorPkg",
       "pages": [
         "login/index",
-        "register/index"
+        "register/index",
+        "home/index",
+        "topics/index",
+        "topic-edit/index",
+        "applications/index",
+        "papers/index",
+        "paper-detail/index",
+        "profile/index"
       ]
     },
     {
@@ -57,6 +64,9 @@
     "backgroundTextStyle": "light",
     "backgroundColor": "#000000",
     "enablePullDownRefresh": false
+  },
+  "usingComponents": {
+    "back-button": "/components/back-button/index"
   },
   "sitemapLocation": "sitemap.json"
 }

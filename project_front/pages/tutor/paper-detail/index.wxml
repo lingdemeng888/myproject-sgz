@@ -1,0 +1,120 @@
+<back-button></back-button>
+<view class="page" wx:if="{{paper}}">
+  <view class="card">
+    <view class="header">
+      <view class="title">{{paper.title}}</view>
+      <view class="status-pill" style="background: {{paper.status_color}}">{{paper.status_name}}</view>
+    </view>
+
+    <view class="info-grid">
+      <view class="info-item">
+        <text class="label">学生</text>
+        <text class="value">{{paper.student_name}}</text>
+      </view>
+      <view class="info-item">
+        <text class="label">学年</text>
+        <text class="value">{{paper.academic_year}}</text>
+      </view>
+      <view class="info-item">
+        <text class="label">学期</text>
+        <text class="value">{{paper.term_name}}</text>
+      </view>
+      <view class="info-item">
+        <text class="label">选题</text>
+        <text class="value">{{paper.topic_title}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">论文版本（{{versions.length}}个）</view>
+    <view class="versions">
+      <view class="version-item" wx:for="{{versions}}" wx:key="id" bindtap="viewVersion" data-version="{{item}}">
+        <view class="version-header">
+          <text class="version-title">版本 {{item.version_no}}</text>
+          <text class="version-time">{{item.created_at_fmt}}</text>
+        </view>
+        <view class="version-info">
+          <text class="info-text">提交人：{{item.submitted_by_name}}</text>
+          <text class="info-text" wx:if="{{item.is_final === 1}}">【定稿】</text>
+        </view>
+        <view class="version-notes" wx:if="{{item.notes}}">备注：{{item.notes}}</view>
+        <view class="view-hint">点击查看详情 ></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="actions" wx:if="{{canReview}}">
+    <button class="action-btn primary" bindtap="showReviewModal" data-status="4">通过</button>
+    <button class="action-btn warning" bindtap="showReviewModal" data-status="3">待修改</button>
+    <button class="action-btn info" bindtap="showReviewModal" data-status="2">评审中</button>
+  </view>
+</view>
+
+<view class="empty" wx:else>加载中...</view>
+
+<!-- 评审弹窗 -->
+<view class="modal" wx:if="{{showModal}}" catchtap="hideModal">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-title">评审论文</view>
+    <view class="modal-body">
+      <view class="form-item">
+        <text class="form-label">评审状态</text>
+        <text class="form-value">{{reviewStatusName}}</text>
+      </view>
+      <view class="form-item">
+        <text class="form-label">评审意见</text>
+        <textarea class="textarea" placeholder="{{reviewPlaceholder}}" value="{{reviewComment}}" bindinput="onCommentInput" maxlength="500"></textarea>
+        <text class="char-count">{{reviewComment.length}}/500</text>
+      </view>
+    </view>
+    <view class="modal-actions">
+      <button class="modal-btn cancel" bindtap="hideModal">取消</button>
+      <button class="modal-btn confirm" bindtap="submitReview">确定</button>
+    </view>
+  </view>
+</view>
+
+<!-- 版本详情弹窗 -->
+<view class="modal version-modal" wx:if="{{showVersionModal}}" catchtap="hideVersionModal">
+  <view class="modal-content version-content" catchtap="stopPropagation">
+    <view class="modal-title">版本 {{currentVersion.version_no}} 详情</view>
+    <view class="modal-body version-body">
+      <view class="form-item">
+        <text class="form-label">提交时间</text>
+        <text class="form-value">{{currentVersion.created_at_fmt}}</text>
+      </view>
+      <view class="form-item">
+        <text class="form-label">提交人</text>
+        <text class="form-value">{{currentVersion.submitted_by_name}}</text>
+      </view>
+      <view class="form-item" wx:if="{{currentVersion.notes}}">
+        <text class="form-label">备注</text>
+        <text class="form-value">{{currentVersion.notes}}</text>
+      </view>
+      <view class="form-item">
+        <text class="form-label">内容格式</text>
+        <text class="form-value">{{currentVersion.content_format_name}}</text>
+      </view>
+      <view class="form-item">
+        <text class="form-label">论文内容</text>
+        <scroll-view class="content-scroll" scroll-y>
+          <text class="content-text">{{currentVersion.content || '暂无内容'}}</text>
+        </scroll-view>
+      </view>
+      <view class="form-item" wx:if="{{currentVersion.attachments && currentVersion.attachments.length}}">
+        <text class="form-label">附件（{{currentVersion.attachments.length}}个）</text>
+        <view class="attachment-list">
+          <view class="attachment-item" wx:for="{{currentVersion.attachments}}" wx:for-item="file" wx:key="id">
+            <text class="file-icon">📎</text>
+            <text class="file-name">{{file.file_name}}</text>
+            <text class="file-size">{{file.file_size}} bytes</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="modal-actions">
+      <button class="modal-btn confirm" bindtap="hideVersionModal">关闭</button>
+    </view>
+  </view>
+</view>

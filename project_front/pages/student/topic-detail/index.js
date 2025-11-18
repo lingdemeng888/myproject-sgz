@@ -33,7 +33,7 @@ Page({
 
   async loadDetail() {
     try {
-      const detail = await get(`/topics/${this.data.topicId}`, {}, { showLoading: true });
+      const detail = await get(`/tutor/topics/${this.data.topicId}`, {}, { showLoading: true });
       this.setData({
         detail,
         termName: this.formatTerm(detail?.term)

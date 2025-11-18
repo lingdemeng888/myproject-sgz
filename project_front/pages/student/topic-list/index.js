@@ -49,13 +49,19 @@ Page({
     this.setData({ loading: true });
     const params = {
       page: this.data.page,
-      page_size: this.data.pageSize,
-      keyword: this.data.keyword.trim() || undefined,
-      major_id: this.data.userMajorId || undefined
+      page_size: this.data.pageSize
+      // 临时注释专业筛选，让学生可以看到所有选题
+      // major_id: this.data.userMajorId || undefined
     };
+    // 只有当keyword有值时才添加参数
+    if (this.data.keyword && this.data.keyword.trim()) {
+      params.keyword = this.data.keyword.trim();
+    }
     try {
       const res = await get('/student/topics', params, { showLoading });
+      console.log('[DEBUG] 学生端选题列表API响应:', res);
       const items = res?.items || [];
+      console.log('[DEBUG] items数量:', items.length);
       const decorated = items.map(item => ({
         ...item,
         term_name: this.formatTerm(item.term)

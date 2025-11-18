@@ -1,0 +1,57 @@
+<back-button></back-button>
+<view class="page">
+  <view class="tabs">
+    <view class="tab {{activeStatus === null ? 'active' : ''}}" bindtap="changeStatus" data-value="">全部</view>
+    <view class="tab {{activeStatus === 0 ? 'active' : ''}}" bindtap="changeStatus" data-value="0">待审批</view>
+    <view class="tab {{activeStatus === 1 ? 'active' : ''}}" bindtap="changeStatus" data-value="1">已通过</view>
+    <view class="tab {{activeStatus === 2 ? 'active' : ''}}" bindtap="changeStatus" data-value="2">已拒绝</view>
+  </view>
+
+  <view class="filters">
+    <input class="input" placeholder="学生姓名" value="{{studentName}}" bindinput="onStudentNameInput" />
+    <button class="filter-btn" size="mini" bindtap="applyFilter">筛选</button>
+    <button class="filter-btn" size="mini" bindtap="resetFilter">重置</button>
+  </view>
+
+  <view class="list">
+    <block wx:if="{{list.length}}">
+      <view class="card" wx:for="{{list}}" wx:key="id">
+        <view class="card-header">
+          <view class="card-title">{{item.topic_title}}</view>
+          <view class="status-pill" style="background: {{item.status_color}}">{{item.status_name}}</view>
+        </view>
+        
+        <view class="info-row">
+          <text class="label">学生：</text>
+          <text class="value">{{item.student_name}}（{{item.student_no}}）</text>
+        </view>
+        
+        <view class="info-row">
+          <text class="label">申请时间：</text>
+          <text class="value">{{item.created_at_fmt}}</text>
+        </view>
+
+        <view class="info-row" wx:if="{{item.application_reason}}">
+          <text class="label">申请理由：</text>
+          <text class="value">{{item.application_reason}}</text>
+        </view>
+
+        <view class="info-row" wx:if="{{item.decision_comment}}">
+          <text class="label">审批意见：</text>
+          <text class="value">{{item.decision_comment}}</text>
+        </view>
+
+        <view class="card-actions" wx:if="{{item.status === 0}}">
+          <button class="action-btn approve" size="mini" bindtap="approveApplication" data-id="{{item.id}}" data-title="{{item.topic_title}}">通过</button>
+          <button class="action-btn reject" size="mini" bindtap="rejectApplication" data-id="{{item.id}}" data-title="{{item.topic_title}}">拒绝</button>
+        </view>
+      </view>
+    </block>
+    
+    <view class="empty" wx:else>暂无申请记录</view>
+    
+    <view class="load-more" wx:if="{{hasMore}}">
+      <button size="mini" bindtap="loadMore" loading="{{loading}}">加载更多</button>
+    </view>
+  </view>
+</view>

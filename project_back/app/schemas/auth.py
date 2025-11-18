@@ -21,7 +21,9 @@ class UserInfo(BaseModel):
     student_no: Optional[str] = Field(None, description="学号")
     teacher_no: Optional[str] = Field(None, description="教师编号")
     department_id: Optional[int] = Field(None, description="所属院系ID")
+    department_name: Optional[str] = Field(None, description="院系名称")
     primary_major_id: Optional[int] = Field(None, description="主修专业ID")
+    primary_major_name: Optional[str] = Field(None, description="主修专业名称")
 
     class Config:
         from_attributes = True

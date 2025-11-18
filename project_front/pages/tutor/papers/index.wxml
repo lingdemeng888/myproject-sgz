@@ -1,0 +1,50 @@
+<back-button></back-button>
+<view class="page">
+  <view class="filters">
+    <input class="input" placeholder="学生姓名" value="{{studentName}}" bindinput="onStudentNameInput" />
+    <input class="input" placeholder="学年（如2024-2025）" value="{{academicYear}}" bindinput="onYearInput" />
+    <button class="filter-btn" size="mini" bindtap="applyFilter">筛选</button>
+    <button class="filter-btn" size="mini" bindtap="resetFilter">重置</button>
+  </view>
+
+  <view class="list">
+    <block wx:if="{{list.length}}">
+      <view class="card" wx:for="{{list}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+        <view class="card-header">
+          <view class="card-title">{{item.title}}</view>
+          <view class="status-pill" style="background: {{item.status_color}}">{{item.status_name}}</view>
+        </view>
+        
+        <view class="info-row">
+          <text class="label">学生：</text>
+          <text class="value">{{item.student_name}}</text>
+        </view>
+        
+        <view class="info-row">
+          <text class="label">学年学期：</text>
+          <text class="value">{{item.academic_year}} {{item.term_name}}</text>
+        </view>
+
+        <view class="info-row">
+          <text class="label">选题：</text>
+          <text class="value">{{item.topic_title}}</text>
+        </view>
+
+        <view class="info-row">
+          <text class="label">版本数：</text>
+          <text class="value">{{item.version_count || 0}}</text>
+        </view>
+
+        <view class="card-footer" wx:if="{{item.status === 1 || item.status === 2}}">
+          <text class="tip">待评审</text>
+        </view>
+      </view>
+    </block>
+    
+    <view class="empty" wx:else>暂无论文记录</view>
+    
+    <view class="load-more" wx:if="{{hasMore}}">
+      <button size="mini" bindtap="loadMore" loading="{{loading}}">加载更多</button>
+    </view>
+  </view>
+</view>

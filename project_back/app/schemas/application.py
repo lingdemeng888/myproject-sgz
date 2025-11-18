@@ -41,6 +41,9 @@ class ApplicationResponse(BaseModel):
     decision_by_name: str | None  # 审批人姓名
     decision_at: datetime | None
     decision_comment: str | None
+    academic_year: str | None  # 学年
+    term: int | None  # 学期
+    paper_id: int | None  # 关联的论文ID（如果已创建）
     created_at: datetime
     updated_at: datetime
 

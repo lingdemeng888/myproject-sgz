@@ -12,9 +12,8 @@ class OperationLog(Base):
     __tablename__ = "operation_log"
     __table_args__ = (
         Index('idx_log_created_at', 'created_at'),
-        Index('idx_log_user_id', 'user_id'),
+        Index('idx_log_actor_id', 'actor_id'),
         Index('idx_log_action', 'action'),
-        Index('idx_log_resource_type', 'resource_type'),
     )
 
     id: Mapped[int] = mapped_column(
@@ -22,21 +21,21 @@ class OperationLog(Base):
         primary_key=True,
         autoincrement=True
     )
-    user_id: Mapped[int | None] = mapped_column(
+    actor_id: Mapped[int | None] = mapped_column(
         BigInteger().with_variant(Integer, "sqlite"),
         ForeignKey("user.id", ondelete="SET NULL", onupdate="CASCADE"),
         nullable=True,
         comment="操作用户ID"
     )
     action: Mapped[str] = mapped_column(String(64), nullable=False, comment="操作类型: CREATE/UPDATE/DELETE")
-    resource_type: Mapped[str] = mapped_column(String(64), nullable=False, comment="资源类型: topic/paper/user")
-    resource_id: Mapped[int | None] = mapped_column(
+    target_table: Mapped[str | None] = mapped_column(String(64), nullable=True, comment="目标表名")
+    target_id: Mapped[int | None] = mapped_column(
         BigInteger().with_variant(Integer, "sqlite"),
         nullable=True,
-        comment="资源ID"
+        comment="目标记录ID"
     )
     detail: Mapped[str | None] = mapped_column(Text, nullable=True, comment="操作详情JSON")
-    ip_address: Mapped[str | None] = mapped_column(String(64), nullable=True, comment="IP地址")
+    ip: Mapped[str | None] = mapped_column(String(64), nullable=True, comment="IP地址")
     
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=False),

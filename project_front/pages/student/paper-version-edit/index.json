@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "新增论文版本"
+  "navigationBarTitleText": "新增论文版本",
+  "usingComponents": {
+    "back-button": "/components/back-button/index"
+  }
 }

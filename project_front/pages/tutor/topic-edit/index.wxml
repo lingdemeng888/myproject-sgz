@@ -1,0 +1,92 @@
+<back-button></back-button>
+<view class="edit-page">
+  <view class="form">
+    <view class="form-item">
+      <view class="label required">选题标题</view>
+      <input 
+        class="input" 
+        placeholder="请输入选题标题" 
+        value="{{formData.title}}"
+        bindinput="onTitleInput"
+        maxlength="100"
+      />
+      <view class="tip">{{formData.title.length}}/100</view>
+    </view>
+
+    <view class="form-item">
+      <view class="label required">选题描述</view>
+      <textarea 
+        class="textarea" 
+        placeholder="请输入选题描述（至少10字符）" 
+        value="{{formData.description}}"
+        bindinput="onDescInput"
+        maxlength="500"
+        auto-height
+      />
+      <view class="tip">{{formData.description.length}}/500（至少10字）</view>
+    </view>
+
+    <view class="form-item">
+      <view class="label required">所属专业</view>
+      <picker 
+        mode="selector" 
+        range="{{majors}}" 
+        range-key="name"
+        value="{{majorIndex}}"
+        bindchange="onMajorChange"
+      >
+        <view class="picker">
+          {{selectedMajor || '请选择专业'}}
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <view class="label required">学年</view>
+      <input 
+        class="input" 
+        placeholder="请输入学年（如：2024-2025）" 
+        value="{{formData.academic_year}}"
+        bindinput="onAcademicYearInput"
+        maxlength="9"
+      />
+      <view class="tip">格式：YYYY-YYYY</view>
+    </view>
+
+    <view class="form-item">
+      <view class="label required">学期</view>
+      <picker 
+        mode="selector" 
+        range="{{terms}}" 
+        range-key="name"
+        value="{{termIndex}}"
+        bindchange="onTermChange"
+      >
+        <view class="picker">
+          {{selectedTerm || '请选择学期'}}
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <view class="label required">最大学生数</view>
+      <input 
+        class="input" 
+        type="number" 
+        placeholder="请输入最大学生数（1-10）" 
+        value="{{formData.max_students}}"
+        bindinput="onMaxStudentsInput"
+      />
+      <view class="tip">可指导的学生人数上限</view>
+    </view>
+  </view>
+
+  <view class="actions">
+    <button class="btn save-btn" bindtap="saveDraft" loading="{{saving}}">
+      保存草稿
+    </button>
+    <button class="btn publish-btn" bindtap="saveAndPublish" loading="{{publishing}}">
+      保存并发布
+    </button>
+  </view>
+</view>

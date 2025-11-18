@@ -5,6 +5,7 @@ Page({
   data: {
     user: null,
     majorLabel: '',
+    departmentLabel: '',
     initial: ''
   },
 
@@ -27,10 +28,13 @@ Page({
 
   updateView(user) {
     if (!user) return;
-    const majorLabel = user.primary_major_name ? user.primary_major_name : (user.primary_major_id ? `ID：${user.primary_major_id}` : '未设置');
+    // 专业显示：优先名称，降级ID，最后未设置
+    const majorLabel = user.primary_major_name || (user.primary_major_id ? `专业ID: ${user.primary_major_id}` : '未设置');
+    // 院系显示：优先名称，降级ID，最后未设置
+    const departmentLabel = user.department_name || (user.department_id ? `院系ID: ${user.department_id}` : '未设置');
     const source = user.real_name || user.username || '';
     const initial = source ? source.slice(0, 1) : '?';
-    this.setData({ user, majorLabel, initial });
+    this.setData({ user, majorLabel, departmentLabel, initial });
   },
 
   logout() {

@@ -2,7 +2,7 @@
 选题申请业务逻辑服务
 """
 from sqlalchemy.orm import Session
-from sqlalchemy import select, func, or_
+from sqlalchemy import select, func, or_, case
 from datetime import datetime
 from typing import Optional
 
@@ -12,6 +12,7 @@ from app.models.topic_application import TopicApplication
 from app.models.user import User
 from app.models.major import Major
 from app.models.department import Department
+from app.models.paper import Paper
 from app.services.log_service import LogService
 from app.schemas.application import (
     ApplicationCreateRequest,
@@ -58,17 +59,30 @@ class ApplicationService:
             raise BusinessException(message="学生不存在", code=404)
         
         # 构建基础查询（强制status=1，有名额）
+        print(f"[DEBUG] 开始构建查询条件...")
+        print(f"[DEBUG] TopicStatus.PUBLISHED = {TopicStatus.PUBLISHED}")
+        
         stmt = select(Topic).filter(
             Topic.status == TopicStatus.PUBLISHED,
             Topic.current_students < Topic.max_students
         )
         
-        # 专业筛选（如果学生有设置专业，默认筛选本专业）
-        if query.major_id:
-            stmt = stmt.filter(Topic.major_id == query.major_id)
-        elif student.primary_major_id:
-            # 如果没有指定major_id，默认只显示本专业的选题
-            stmt = stmt.filter(Topic.major_id == student.primary_major_id)
+        # 调试日志：查询所有选题（不带筛选）
+        all_topics = db.query(Topic).all()
+        print(f"[DEBUG] 数据库中总选题数: {len(all_topics)}")
+        for t in all_topics:
+            print(f"  - ID:{t.id}, 标题:{t.title}, 状态:{t.status}({TopicStatus.get_name(t.status)}), 名额:{t.current_students}/{t.max_students}")
+            print(f"    status == PUBLISHED? {t.status == TopicStatus.PUBLISHED}")
+            print(f"    current_students < max_students? {t.current_students < t.max_students}")
+            print(f"    应该被筛选? {t.status == TopicStatus.PUBLISHED and t.current_students < t.max_students}")
+        
+        # 系部筛选（按系部而非专业）
+        if student.department_id:
+            # 如果学生有设置系部，只显示该系部下所有专业的选题
+            stmt = stmt.join(Major, Topic.major_id == Major.id).filter(
+                Major.department_id == student.department_id
+            )
+            print(f"[DEBUG] 按系部筛选: student.department_id = {student.department_id}")
         
         # 关键词搜索
         if query.keyword:
@@ -83,11 +97,28 @@ class ApplicationService:
         # 统计总数
         total = db.query(func.count()).select_from(stmt.subquery()).scalar()
         
-        # 分页查询
+        # 调试日志
+        print(f"[DEBUG] 学生 {student_id} 查询选题: total={total}, page={query.page}, page_size={query.page_size}")
+        print(f"[DEBUG] 筛选条件: status=1(PUBLISHED), current_students < max_students")
+        
+        # 分页查询 - MySQL兼容的排序（使用CASE处理NULL值）
         offset = (query.page - 1) * query.page_size
-        stmt = stmt.order_by(Topic.published_at.desc()).offset(offset).limit(query.page_size)
+        stmt = stmt.order_by(
+            case((Topic.published_at.is_(None), 0), else_=1).desc(),
+            Topic.published_at.desc(),
+            Topic.created_at.desc()
+        ).offset(offset).limit(query.page_size)
+        
+        # 调试：打印生成的SQL
+        print(f"[DEBUG] 执行查询...")
         
         topics = db.execute(stmt).scalars().all()
+        
+        # 调试日志
+        print(f"[DEBUG] 查询到 {len(topics)} 条选题数据")
+        if len(topics) > 0:
+            for t in topics:
+                print(f"  - 返回选题: ID:{t.id}, 标题:{t.title}")
         
         # 转换为响应对象
         items = [ApplicationService._to_student_topic_response(db, topic) for topic in topics]
@@ -371,6 +402,20 @@ class ApplicationService:
         # 获取状态名称
         status_name = ApplicationStatus.get_name(application.status)
         
+        # 查询关联的论文ID（如果已创建）
+        paper_id = None
+        academic_year = None
+        term = None
+        if topic:
+            paper = db.query(Paper).filter(
+                Paper.student_id == application.student_id,
+                Paper.topic_id == application.topic_id
+            ).first()
+            if paper:
+                paper_id = paper.id
+            academic_year = topic.academic_year
+            term = topic.term
+        
         return ApplicationResponse(
             id=application.id,
             topic_id=application.topic_id,
@@ -385,6 +430,9 @@ class ApplicationService:
             decision_by_name=decision_by_name,
             decision_at=application.decision_at,
             decision_comment=application.decision_comment,
+            academic_year=academic_year,
+            term=term,
+            paper_id=paper_id,
             created_at=application.created_at,
             updated_at=application.updated_at
         )

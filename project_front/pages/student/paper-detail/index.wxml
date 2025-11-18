@@ -1,3 +1,4 @@
+<back-button></back-button>
 <view class="page" wx:if="{{paper}}">
   <view class="card">
     <view class="title">{{paper.title}}</view>
@@ -22,6 +23,14 @@
           <text class="time">{{item.submitted_at_fmt}}</text>
         </view>
         <view class="version-notes">{{item.notes || '无备注'}}</view>
+        <view class="review-section" wx:if="{{item.review_comment}}">
+          <view class="review-header">
+            <text class="review-label">导师评审意见</text>
+            <text class="review-time" wx:if="{{item.reviewed_at_fmt}}">{{item.reviewed_at_fmt}}</text>
+          </view>
+          <view class="review-content">{{item.review_comment}}</view>
+          <view class="reviewer" wx:if="{{item.reviewed_by_name}}">评审人：{{item.reviewed_by_name}}</view>
+        </view>
       </view>
     </block>
     <view class="empty" wx:else>还没有版本，先新增一个版本再提交论文。</view>

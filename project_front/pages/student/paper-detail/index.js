@@ -57,7 +57,8 @@ Page({
       created_at_fmt: formatTime(paper.created_at),
       versions: (paper.versions || []).map(v => ({
         ...v,
-        submitted_at_fmt: formatTime(v.submitted_at)
+        submitted_at_fmt: formatTime(v.submitted_at),
+        reviewed_at_fmt: formatTime(v.reviewed_at)
       }))
     };
   },

@@ -1,3 +1,4 @@
+<back-button></back-button>
 <view class="page">
   <view class="filters">
     <input class="input" placeholder="学年（例如 2024-2025）" value="{{filters.academic_year}}" bindinput="onYearInput" />

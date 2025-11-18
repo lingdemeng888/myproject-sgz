@@ -14,6 +14,8 @@ from app.schemas.user import StudentRegisterRequest, TutorRegisterRequest, UserR
 from app.schemas.auth import LoginRequest, LoginResponse, UserInfo
 from app.services.user_service import UserService
 from app.models.user import User
+from app.models.department import Department
+from app.models.major import Major
 
 settings = get_settings()
 router = APIRouter(prefix="/auth", tags=["用户认证"])
@@ -107,7 +109,20 @@ def login(
     # 2. 生成JWT token
     access_token = create_access_token(subject=user.username)
     
-    # 3. 构造用户信息
+    # 3. 查询院系名称和专业名称
+    department_name = None
+    if user.department_id:
+        department = db.query(Department).filter(Department.id == user.department_id).first()
+        if department:
+            department_name = department.name
+    
+    primary_major_name = None
+    if user.primary_major_id:
+        major = db.query(Major).filter(Major.id == user.primary_major_id).first()
+        if major:
+            primary_major_name = major.name
+    
+    # 4. 构造用户信息
     user_info = UserInfo(
         id=user.id,
         username=user.username,
@@ -117,10 +132,12 @@ def login(
         student_no=user.student_no,
         teacher_no=user.teacher_no,
         department_id=user.department_id,
-        primary_major_id=user.primary_major_id
+        department_name=department_name,
+        primary_major_id=user.primary_major_id,
+        primary_major_name=primary_major_name
     )
     
-    # 4. 构造登录响应
+    # 5. 构造登录响应
     login_response = LoginResponse(
         access_token=access_token,
         token_type="bearer",
@@ -136,7 +153,8 @@ def login(
 
 @router.get("/me", response_model=ApiResponse[UserInfo], summary="获取当前用户信息")
 def get_current_user_info(
-    current_user: Annotated[User, Depends(get_current_user)]
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Session = Depends(get_db)
 ):
     """
     获取当前登录用户信息（需要认证）
@@ -145,13 +163,26 @@ def get_current_user_info(
     - Authorization: Bearer {access_token}
     
     **返回数据：**
-    - 用户基本信息（包含角色列表）
+    - 用户基本信息（包含角色列表、院系名称、专业名称）
     
     **使用场景：**
     - 页面加载时获取用户信息
     - 验证token有效性
     - 获取用户权限信息
     """
+    # 查询院系名称和专业名称
+    department_name = None
+    if current_user.department_id:
+        department = db.query(Department).filter(Department.id == current_user.department_id).first()
+        if department:
+            department_name = department.name
+    
+    primary_major_name = None
+    if current_user.primary_major_id:
+        major = db.query(Major).filter(Major.id == current_user.primary_major_id).first()
+        if major:
+            primary_major_name = major.name
+    
     user_info = UserInfo(
         id=current_user.id,
         username=current_user.username,
@@ -161,7 +192,9 @@ def get_current_user_info(
         student_no=current_user.student_no,
         teacher_no=current_user.teacher_no,
         department_id=current_user.department_id,
-        primary_major_id=current_user.primary_major_id
+        department_name=department_name,
+        primary_major_id=current_user.primary_major_id,
+        primary_major_name=primary_major_name
     )
     
     return ApiResponse.success(

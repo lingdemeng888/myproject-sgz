@@ -2,7 +2,7 @@
 论文业务逻辑服务
 """
 from sqlalchemy.orm import Session
-from sqlalchemy import select, func
+from sqlalchemy import select, func, case
 from datetime import datetime
 from typing import Optional
 
@@ -411,11 +411,17 @@ class PaperService:
         )
 
     @staticmethod
-    def _to_version_response(db: Session, version: PaperVersion) -> PaperVersionResponse:
+    def _to_version_response(db: Session, version: PaperVersion, include_content: bool = True) -> PaperVersionResponse:
         """转换为版本响应对象"""
         # 查询提交人信息
         submitter = db.query(User).filter(User.id == version.submitted_by).first()
         submitter_name = submitter.real_name if submitter and submitter.real_name else "未知"
+        
+        # 查询评审人信息
+        reviewer_name = None
+        if version.reviewed_by:
+            reviewer = db.query(User).filter(User.id == version.reviewed_by).first()
+            reviewer_name = reviewer.real_name if reviewer and reviewer.real_name else "未知"
         
         # 格式名称映射
         format_names = {
@@ -426,17 +432,38 @@ class PaperService:
         }
         content_format_name = format_names.get(version.content_format, "未知")
         
+        # 查询附件列表
+        from app.models.paper_attachment import PaperAttachment
+        attachments = db.query(PaperAttachment).filter(
+            PaperAttachment.paper_version_id == version.id
+        ).all()
+        
+        attachment_list = [{
+            'id': att.id,
+            'file_name': att.file_name,
+            'file_size': att.file_size,
+            'storage_url': att.storage_url,
+            'mime_type': att.mime_type,
+            'uploaded_at': att.uploaded_at
+        } for att in attachments]
+        
         return PaperVersionResponse(
             id=version.id,
             paper_id=version.paper_id,
             version_no=version.version_no,
+            content=version.content_text if include_content else None,
             content_format=version.content_format,
             content_format_name=content_format_name,
             is_final=version.is_final,
             submitted_by=version.submitted_by,
             submitted_by_name=submitter_name,
             submitted_at=version.submitted_at,
-            notes=version.notes
+            notes=version.notes,
+            attachments=attachment_list,
+            review_comment=version.review_comment,
+            reviewed_by=version.reviewed_by,
+            reviewed_by_name=reviewer_name,
+            reviewed_at=version.reviewed_at
         )
 
     # ========== 附件管理方法 ==========
@@ -786,9 +813,16 @@ class PaperService:
         # ========== 步骤4：更新论文状态 ==========
         paper.status = status
         
-        # 如果是通过，记录通过时间（可选，根据需求）
-        # if status == PaperStatus.APPROVED:
-        #     paper.approved_at = datetime.now()
+        # ========== 步骤4.5：保存评审意见到最新版本 ==========
+        from datetime import datetime
+        latest_version = db.query(PaperVersion).filter(
+            PaperVersion.paper_id == paper_id
+        ).order_by(PaperVersion.version_no.desc()).first()
+        
+        if latest_version:
+            latest_version.review_comment = review_comment
+            latest_version.reviewed_by = tutor_id
+            latest_version.reviewed_at = datetime.now()
         
         db.commit()
         db.refresh(paper)
@@ -806,12 +840,12 @@ class PaperService:
         }
         
         operation_log = OperationLog(
-            user_id=tutor_id,
+            actor_id=tutor_id,
             action="review_paper",
-            resource_type="paper",
-            resource_id=paper_id,
+            target_table="paper",
+            target_id=paper_id,
             detail=json.dumps(operation_detail, ensure_ascii=False),
-            ip_address=ip_address
+            ip=ip_address
         )
         
         db.add(operation_log)
@@ -877,8 +911,11 @@ class PaperService:
         
         # ========== 分页查询 ==========
         offset = (query.page - 1) * query.page_size
+        # MySQL不支持NULLS FIRST，使用CASE实现相同效果
+        # submitted_at为NULL的排在前面（DESC时，1在前，0在后）
         stmt = stmt.order_by(
-            Paper.submitted_at.desc().nullsfirst(),
+            case((Paper.submitted_at.is_(None), 1), else_=0).desc(),
+            Paper.submitted_at.desc(),
             Paper.created_at.desc()
         ).offset(offset).limit(query.page_size)
         

@@ -49,3 +49,15 @@ class PaperVersion(Base):
         comment="提交时间"
     )
     notes: Mapped[str | None] = mapped_column(String(255), nullable=True, comment="备注")
+    review_comment: Mapped[str | None] = mapped_column(Text, nullable=True, comment="导师评审意见")
+    reviewed_by: Mapped[int | None] = mapped_column(
+        BigInteger().with_variant(Integer, "sqlite"),
+        ForeignKey("user.id", ondelete="SET NULL", onupdate="RESTRICT"),
+        nullable=True,
+        comment="评审导师ID"
+    )
+    reviewed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=False),
+        nullable=True,
+        comment="评审时间"
+    )

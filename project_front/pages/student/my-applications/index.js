@@ -1,5 +1,5 @@
 const { ensureStudent } = require('../../../utils/auth');
-const { get } = require('../../../utils/request');
+const { get, post } = require('../../../utils/request');
 const { APPLICATION_STATUS_COLOR } = require('../../../utils/constants');
 
 Page({
@@ -102,5 +102,59 @@ Page({
       content,
       showCancel: false
     });
+  },
+
+  async createPaper(e) {
+    const application = e.currentTarget.dataset.application;
+    if (!application) return;
+    
+    wx.showModal({
+      title: '创建论文',
+      content: `选题：${application.topic_title}`,
+      editable: true,
+      placeholderText: '请输入论文标题',
+      success: async (res) => {
+        if (res.confirm) {
+          const title = res.content?.trim();
+          if (!title) {
+            wx.showToast({ title: '请输入论文标题', icon: 'none' });
+            return;
+          }
+          if (title.length < 5) {
+            wx.showToast({ title: '论文标题至少5个字符', icon: 'none' });
+            return;
+          }
+          
+          try {
+            const result = await post('/student/papers', {
+              topic_id: application.topic_id,
+              title: title,
+              academic_year: application.academic_year || new Date().getFullYear() + '-' + (new Date().getFullYear() + 1),
+              term: application.term || 1
+            }, { showLoading: true });
+            
+            wx.showModal({
+              title: '创建成功',
+              content: '论文已创建，是否立即前往查看？',
+              success: (modalRes) => {
+                if (modalRes.confirm && result?.id) {
+                  wx.navigateTo({ url: `/pages/student/paper-detail/index?id=${result.id}` });
+                } else {
+                  this.refresh();
+                }
+              }
+            });
+          } catch (err) {
+            console.error('创建论文失败', err);
+          }
+        }
+      }
+    });
+  },
+
+  viewPaper(e) {
+    const { id } = e.currentTarget.dataset;
+    if (!id) return;
+    wx.navigateTo({ url: `/pages/student/paper-detail/index?id=${id}` });
   }
 });

@@ -1,0 +1,116 @@
+<back-button></back-button>
+<view class="topics-page">
+  <!-- 顶部操作栏 -->
+  <view class="top-bar">
+    <view class="search-bar">
+      <input 
+        class="search-input" 
+        placeholder="搜索选题标题..." 
+        value="{{keyword}}"
+        bindinput="onKeywordInput"
+        bindconfirm="onSearch"
+      />
+      <button class="search-btn" size="mini" bindtap="onSearch">搜索</button>
+    </view>
+    <button class="add-btn" bindtap="goCreateTopic">+ 发布选题</button>
+  </view>
+
+  <!-- 筛选条件 -->
+  <view class="filter-bar">
+    <scroll-view class="filter-scroll" scroll-x>
+      <view class="filter-item {{statusFilter === null ? 'active' : ''}}" bindtap="filterByStatus" data-status="{{null}}">
+        全部
+      </view>
+      <view class="filter-item {{statusFilter === 0 ? 'active' : ''}}" bindtap="filterByStatus" data-status="0">
+        草稿
+      </view>
+      <view class="filter-item {{statusFilter === 1 ? 'active' : ''}}" bindtap="filterByStatus" data-status="1">
+        已发布
+      </view>
+      <view class="filter-item {{statusFilter === 2 ? 'active' : ''}}" bindtap="filterByStatus" data-status="2">
+        已锁定
+      </view>
+      <view class="filter-item {{statusFilter === 3 ? 'active' : ''}}" bindtap="filterByStatus" data-status="3">
+        已归档
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 选题列表 -->
+  <scroll-view 
+    class="topic-list" 
+    scroll-y 
+    bindscrolltolower="loadMore"
+    lower-threshold="100"
+  >
+    <block wx:if="{{topics.length}}">
+      <view class="topic-card" wx:for="{{topics}}" wx:key="id" bindtap="goTopicDetail" data-id="{{item.id}}">
+        <view class="topic-header">
+          <text class="topic-title">{{item.title}}</text>
+          <view class="status-badge" style="background: {{item.status_color}}">
+            {{item.status_name}}
+          </view>
+        </view>
+        
+        <view class="topic-meta">
+          <text>专业：{{item.major_name || '未设置'}}</text>
+          <text>名额：{{item.current_students}}/{{item.max_students}}</text>
+        </view>
+        
+        <view class="topic-desc" wx:if="{{item.description}}">
+          {{item.description}}
+        </view>
+        
+        <view class="topic-footer">
+          <text class="topic-time">{{item.created_at_fmt}}</text>
+          <view class="topic-actions">
+            <button 
+              class="action-btn edit" 
+              size="mini" 
+              catchtap="editTopic" 
+              data-id="{{item.id}}"
+              wx:if="{{item.status === 0}}"
+            >
+              编辑
+            </button>
+            <button 
+              class="action-btn publish" 
+              size="mini" 
+              catchtap="publishTopic" 
+              data-id="{{item.id}}"
+              wx:if="{{item.status === 0}}"
+            >
+              发布
+            </button>
+            <button 
+              class="action-btn lock" 
+              size="mini" 
+              catchtap="lockTopic" 
+              data-id="{{item.id}}"
+              wx:if="{{item.status === 1}}"
+            >
+              锁定
+            </button>
+            <button 
+              class="action-btn archive" 
+              size="mini" 
+              catchtap="archiveTopic" 
+              data-id="{{item.id}}"
+              wx:if="{{item.status === 2}}"
+            >
+              归档
+            </button>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <view class="empty" wx:elif="{{!loading}}">
+      <text class="empty-text">暂无选题</text>
+      <button class="empty-btn" bindtap="goCreateTopic">立即发布</button>
+    </view>
+
+    <view class="loading" wx:if="{{loading}}">加载中...</view>
+    <view class="no-more" wx:if="{{!hasMore && topics.length}}">没有更多了</view>
+  </scroll-view>
+</view>

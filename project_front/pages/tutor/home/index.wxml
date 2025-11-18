@@ -1,0 +1,81 @@
+<view class="home">
+  <view class="hero">
+    <view class="hero-text">
+      <text class="hello">你好，{{userInfo.real_name || '老师'}}</text>
+      <text class="meta">工号：{{userInfo.teacher_no || '未登记'}} · 院系：{{departmentLabel}}</text>
+    </view>
+    <view class="actions">
+      <button class="mini-btn" size="mini" bindtap="refreshData" loading="{{loading}}">刷新</button>
+    </view>
+  </view>
+
+  <view class="stats-grid">
+    <view class="stat-card">
+      <text class="stat-number">{{stats.pending_applications || 0}}</text>
+      <text class="stat-label">待审批</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-number">{{stats.published_topics || 0}}</text>
+      <text class="stat-label">发布选题</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-number">{{stats.guiding_students || 0}}</text>
+      <text class="stat-label">指导学生</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-number">{{stats.reviewing_papers || 0}}</text>
+      <text class="stat-label">待评论文</text>
+    </view>
+  </view>
+
+  <view class="quick-grid">
+    <view class="quick-card" bindtap="goTopics">
+      <text class="quick-badge">题</text>
+      <text>选题管理</text>
+    </view>
+    <view class="quick-card" bindtap="goApplications">
+      <text class="quick-badge">审</text>
+      <text>申请审批</text>
+    </view>
+    <view class="quick-card" bindtap="goPapers">
+      <text class="quick-badge">论</text>
+      <text>论文督导</text>
+    </view>
+    <view class="quick-card" bindtap="goProfile">
+      <text class="quick-badge">我</text>
+      <text>个人中心</text>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">待审批申请</text>
+      <text class="section-link" bindtap="goApplications">查看全部</text>
+    </view>
+    <block wx:if="{{pendingApplications.length}}">
+      <view class="card" wx:for="{{pendingApplications}}" wx:key="id" bindtap="handleApplication" data-id="{{item.id}}">
+        <view class="card-title">{{item.topic_title}}</view>
+        <view class="card-meta">学生：{{item.student_name}}（{{item.student_no}}）</view>
+        <view class="card-meta">提交时间：{{item.created_at_fmt}}</view>
+        <view class="card-desc" wx:if="{{item.application_reason}}">申请理由：{{item.application_reason}}</view>
+      </view>
+    </block>
+    <view class="empty" wx:else>暂无待审批申请</view>
+  </view>
+
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">最近论文</text>
+      <text class="section-link" bindtap="goPapers">查看全部</text>
+    </view>
+    <block wx:if="{{recentPapers.length}}">
+      <view class="card" wx:for="{{recentPapers}}" wx:key="id" bindtap="goPaperDetail" data-id="{{item.id}}">
+        <view class="card-title">{{item.title}}</view>
+        <view class="card-meta">学生：{{item.student_name}} · {{item.academic_year}}</view>
+        <view class="status-pill" style="background: {{item.status_color}}">{{item.status_name}}</view>
+        <view class="card-desc">版本数：{{item.version_count || 0}}</view>
+      </view>
+    </block>
+    <view class="empty" wx:else>暂无论文记录</view>
+  </view>
+</view>

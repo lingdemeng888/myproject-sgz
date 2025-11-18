@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "论文督导",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "back-button": "/components/back-button/index"
+  }
+}

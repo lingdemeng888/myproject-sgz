@@ -1,3 +1,4 @@
+<back-button></back-button>
 <view class="page" wx:if="{{user}}">
   <view class="card">
     <view class="avatar">{{initial}}</view>
@@ -15,8 +16,8 @@
       <text class="value">{{majorLabel}}</text>
     </view>
     <view class="info-item">
-      <text class="label">院系ID</text>
-      <text class="value">{{user.department_id || '未设置'}} </text>
+      <text class="label">院系</text>
+      <text class="value">{{departmentLabel}}</text>
     </view>
     <view class="info-item">
       <text class="label">账号状态</text>

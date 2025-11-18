@@ -1,0 +1,27 @@
+<back-button></back-button>
+<view class="page" wx:if="{{user}}">
+  <view class="card">
+    <view class="avatar">{{initial}}</view>
+    <view class="name">{{user.real_name || user.username}}</view>
+    <view class="role">导师 · 工号：{{user.teacher_no || '未填写'}}</view>
+  </view>
+
+  <view class="info-card">
+    <view class="info-item">
+      <text class="label">用户名</text>
+      <text class="value">{{user.username}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">院系</text>
+      <text class="value">{{departmentLabel}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">账号状态</text>
+      <text class="value">{{user.status === 1 ? '正常' : '禁用'}}</text>
+    </view>
+  </view>
+
+  <button class="btn" type="warn" bindtap="logout">退出登录</button>
+</view>
+
+<view class="empty" wx:else>正在加载...</view>

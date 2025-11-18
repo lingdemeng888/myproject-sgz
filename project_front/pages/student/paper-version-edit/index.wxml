@@ -1,3 +1,4 @@
+<back-button></back-button>
 <view class="page">
   <view class="card">
     <view class="label">正文内容</view>

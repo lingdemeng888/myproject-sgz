@@ -84,6 +84,7 @@ class PaperVersionResponse(BaseModel):
     id: int
     paper_id: int
     version_no: int
+    content: str | None  # 论文内容（详情时返回）
     content_format: int
     content_format_name: str  # 格式名称
     is_final: int
@@ -91,7 +92,11 @@ class PaperVersionResponse(BaseModel):
     submitted_by_name: str  # 提交人姓名
     submitted_at: datetime
     notes: str | None
-    # 注意：不返回content_text（太大）
+    attachments: list = []  # 附件列表
+    review_comment: str | None = None  # 导师评审意见
+    reviewed_by: int | None = None  # 评审导师ID
+    reviewed_by_name: str | None = None  # 评审导师姓名
+    reviewed_at: datetime | None = None  # 评审时间
 
     model_config = {
         "from_attributes": True

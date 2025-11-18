@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.dependencies import require_roles
+from app.schemas.response import ApiResponse
 from app.services.paper_service import PaperService
 from app.schemas.paper import (
     PaperReviewRequest,
@@ -18,7 +19,7 @@ from app.models.user import User
 router = APIRouter(prefix="/tutor/papers", tags=["导师-论文管理"])
 
 
-@router.get("", response_model=PaperListResponse, summary="查询指导学生的论文列表")
+@router.get("", response_model=ApiResponse[PaperListResponse], summary="查询指导学生的论文列表")
 def list_student_papers(
     page: int = 1,
     page_size: int = 10,
@@ -51,14 +52,16 @@ def list_student_papers(
     )
     
     # 调用服务层
-    return PaperService.list_student_papers(
+    result = PaperService.list_student_papers(
         db=db,
         tutor_id=current_user.id,
         query=query
     )
+    
+    return ApiResponse.success(data=result)
 
 
-@router.put("/{paper_id}/review", response_model=PaperResponse, summary="评审论文")
+@router.put("/{paper_id}/review", response_model=ApiResponse[PaperResponse], summary="评审论文")
 def review_paper(
     paper_id: int,
     data: PaperReviewRequest,
@@ -94,14 +97,16 @@ def review_paper(
     )
     
     # 返回完整论文详情
-    return PaperService.get_paper_detail_for_tutor(
+    result = PaperService.get_paper_detail_for_tutor(
         db=db,
         paper_id=paper.id,
         tutor_id=current_user.id
     )
+    
+    return ApiResponse.success(data=result)
 
 
-@router.get("/{paper_id}", response_model=PaperResponse, summary="查看论文详情")
+@router.get("/{paper_id}", response_model=ApiResponse[PaperResponse], summary="查看论文详情")
 def get_paper_detail(
     paper_id: int,
     db: Session = Depends(get_db),
@@ -114,8 +119,10 @@ def get_paper_detail(
     """
     
     # 调用服务层
-    return PaperService.get_paper_detail_for_tutor(
+    result = PaperService.get_paper_detail_for_tutor(
         db=db,
         paper_id=paper_id,
         tutor_id=current_user.id
     )
+    
+    return ApiResponse.success(data=result)

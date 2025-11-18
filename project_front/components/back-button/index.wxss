@@ -1,0 +1,41 @@
+/* components/back-button/index.wxss */
+.back-button {
+  position: fixed;
+  top: 24rpx;
+  left: 24rpx;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 20rpx;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 999rpx;
+  backdrop-filter: blur(10rpx);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.back-button:active {
+  opacity: 0.7;
+  transform: scale(0.95);
+}
+
+.back-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.back-text {
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: 500;
+  line-height: 1;
+}
