@@ -40,14 +40,14 @@
       <text class="input-icon">🔒</text>
       <input
         class="input-field"
-        type="{{showPassword ? 'text' : 'password'}}"
+        password="{{!showPassword}}"
         placeholder="请输入密码"
         value="{{password}}"
         bindinput="onPasswordInput"
         placeholder-class="input-placeholder"
       />
       <text class="eye-icon" bindtap="togglePassword">
-        {{showPassword ? '👁️' : '👁️‍🗨️'}}
+        {{showPassword ? '隐藏' : '显示'}}
       </text>
     </view>
 

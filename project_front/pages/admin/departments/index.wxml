@@ -1,0 +1,88 @@
+<back-button />
+<view class="departments-page">
+  <view class="header-bar">
+    <text class="stats-text">共 {{total}} 个系部</text>
+    <view class="header-actions">
+      <button class="refresh-btn" size="mini" bindtap="refreshList" loading="{{loading}}">刷新</button>
+      <button class="add-btn" size="mini" bindtap="showAddDialog">新增系部</button>
+    </view>
+  </view>
+
+  <scroll-view class="department-list" scroll-y>
+    <block wx:if="{{departments.length}}">
+      <view class="department-card" wx:for="{{departments}}" wx:key="id">
+        <view class="dept-header">
+          <view class="dept-info">
+            <text class="dept-name">{{item.name}}</text>
+            <text class="dept-code" wx:if="{{item.code}}">代码：{{item.code}}</text>
+          </view>
+        </view>
+        
+        <view class="dept-meta" wx:if="{{item.description}}">
+          <text class="meta-label">简介：</text>
+          <text class="meta-value">{{item.description}}</text>
+        </view>
+
+        <view class="dept-stats">
+          <text class="stat-item">专业数：{{item.major_count || 0}}</text>
+          <text class="stat-item">创建时间：{{formatDate(item.created_at)}}</text>
+        </view>
+
+        <view class="dept-actions">
+          <button class="action-btn" size="mini" bindtap="showEditDialog" data-item="{{item}}">编辑</button>
+          <button class="action-btn danger" size="mini" bindtap="deleteDepartment" data-id="{{item.id}}" data-name="{{item.name}}">删除</button>
+        </view>
+      </view>
+    </block>
+    
+    <view class="empty" wx:if="{{!loading && departments.length === 0}}">
+      暂无系部数据
+    </view>
+  </scroll-view>
+</view>
+
+<!-- 新增/编辑对话框 -->
+<view class="modal {{showModal ? 'show' : ''}}" catchtap="closeDialog">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-header">
+      <text class="modal-title">{{isEdit ? '编辑系部' : '新增系部'}}</text>
+      <text class="modal-close" bindtap="closeDialog">✕</text>
+    </view>
+    <view class="modal-body">
+      <view class="form-group">
+        <text class="form-label">系部名称 *</text>
+        <input 
+          class="form-input" 
+          type="text" 
+          placeholder="请输入系部名称"
+          value="{{formData.name}}"
+          bindinput="onNameInput"
+        />
+      </view>
+      <view class="form-group">
+        <text class="form-label">系部代码</text>
+        <input 
+          class="form-input" 
+          type="text" 
+          placeholder="请输入系部代码（选填）"
+          value="{{formData.code}}"
+          bindinput="onCodeInput"
+        />
+      </view>
+      <view class="form-group">
+        <text class="form-label">系部简介</text>
+        <textarea 
+          class="form-textarea" 
+          placeholder="请输入系部简介（选填）"
+          value="{{formData.description}}"
+          bindinput="onDescInput"
+          maxlength="500"
+        />
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="modal-btn cancel" bindtap="closeDialog">取消</button>
+      <button class="modal-btn confirm" bindtap="confirmSave">保存</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "操作日志",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "back-button": "/components/back-button/index"
+  }
+}

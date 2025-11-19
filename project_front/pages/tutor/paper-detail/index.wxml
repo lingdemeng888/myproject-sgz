@@ -102,14 +102,20 @@
           <text class="content-text">{{currentVersion.content || '暂无内容'}}</text>
         </scroll-view>
       </view>
-      <view class="form-item" wx:if="{{currentVersion.attachments && currentVersion.attachments.length}}">
-        <text class="form-label">附件（{{currentVersion.attachments.length}}个）</text>
-        <view class="attachment-list">
-          <view class="attachment-item" wx:for="{{currentVersion.attachments}}" wx:for-item="file" wx:key="id">
+      <view class="form-item">
+        <text class="form-label">附件 <text wx:if="{{currentVersion.attachments && currentVersion.attachments.length}}">({{currentVersion.attachments.length}}个)</text></text>
+        <view class="attachment-list" wx:if="{{currentVersion.attachments && currentVersion.attachments.length}}">
+          <view class="attachment-item" wx:for="{{currentVersion.attachments}}" wx:for-item="file" wx:key="id" bindtap="downloadAttachment" data-id="{{file.id}}" data-name="{{file.file_name}}">
             <text class="file-icon">📎</text>
-            <text class="file-name">{{file.file_name}}</text>
-            <text class="file-size">{{file.file_size}} bytes</text>
+            <view class="file-info">
+              <text class="file-name">{{file.file_name}}</text>
+              <text class="file-size">{{file.fileSizeText}}</text>
+            </view>
+            <text class="download-icon">⬇️</text>
           </view>
+        </view>
+        <view class="no-attachment" wx:else>
+          <text class="tip-text">暂无附件</text>
         </view>
       </view>
     </view>

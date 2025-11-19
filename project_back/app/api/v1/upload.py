@@ -33,7 +33,7 @@ async def upload_attachment(
     - 版本必须属于当前学生的论文
     
     **业务规则：**
-    1. 验证文件大小（最大50MB）
+    1. 验证文件大小（最大1GB）
     2. 验证文件类型（.pdf, .doc, .docx, .zip, .rar）
     3. 计算文件哈希（SHA256）
     4. 按 papers/年/月/ 目录结构存储

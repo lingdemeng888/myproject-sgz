@@ -28,6 +28,9 @@ Page({
       const res = await get(`/tutor/papers/${id}`, {}, { showLoading: true });
       const canReview = res.status === 1 || res.status === 2 || res.status === 3;
       
+      console.log('论文详情:', res);
+      console.log('版本列表:', res.versions);
+      
       this.setData({
         paper: {
           ...res,
@@ -47,8 +50,19 @@ Page({
   decorateVersions(versions) {
     return versions.map(v => ({
       ...v,
-      created_at_fmt: this.formatDate(v.created_at)
+      created_at_fmt: this.formatDate(v.submitted_at),
+      attachments: (v.attachments || []).map(att => ({
+        ...att,
+        fileSizeText: this.formatFileSize(att.file_size)
+      }))
     }));
+  },
+
+  formatFileSize(bytes) {
+    if (!bytes) return '0B';
+    if (bytes < 1024) return bytes + 'B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + 'KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + 'MB';
   },
 
   formatDate(value) {
@@ -105,6 +119,8 @@ Page({
   viewVersion(e) {
     const version = e.currentTarget.dataset.version;
     if (!version) return;
+    console.log('查看版本:', version);
+    console.log('版本附件:', version.attachments);
     this.setData({
       showVersionModal: true,
       currentVersion: version
@@ -115,6 +131,46 @@ Page({
     this.setData({ 
       showVersionModal: false,
       currentVersion: null
+    });
+  },
+
+  downloadAttachment(e) {
+    const { id, name } = e.currentTarget.dataset;
+    wx.showLoading({ title: '下载中...', mask: true });
+    
+    const { getToken } = require('../../../utils/auth');
+    const { API_BASE_URL } = require('../../../utils/constants');
+    const token = getToken();
+    
+    wx.downloadFile({
+      url: `${API_BASE_URL}/upload/attachment/${id}`,
+      header: {
+        'Authorization': token ? `Bearer ${token}` : ''
+      },
+      success(res) {
+        wx.hideLoading();
+        if (res.statusCode === 200) {
+          wx.saveFile({
+            tempFilePath: res.tempFilePath,
+            success(saveRes) {
+              wx.showToast({ title: '下载成功', icon: 'success' });
+              wx.openDocument({
+                filePath: saveRes.savedFilePath,
+                showMenu: true
+              });
+            },
+            fail() {
+              wx.showToast({ title: '保存失败', icon: 'none' });
+            }
+          });
+        } else {
+          wx.showToast({ title: '下载失败', icon: 'none' });
+        }
+      },
+      fail() {
+        wx.hideLoading();
+        wx.showToast({ title: '下载失败', icon: 'none' });
+      }
     });
   },
 

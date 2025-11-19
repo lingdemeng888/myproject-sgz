@@ -45,7 +45,12 @@
       "root": "pages/admin",
       "name": "adminPkg",
       "pages": [
-        "login/index"
+        "login/index",
+        "home/index",
+        "users/index",
+        "departments/index",
+        "majors/index",
+        "logs/index"
       ]
     }
   ],

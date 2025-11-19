@@ -1,0 +1,87 @@
+<view class="home">
+  <view class="hero">
+    <view class="hero-text">
+      <text class="hello">管理员工作台</text>
+      <text class="meta">{{userInfo.real_name || '管理员'}} · 工号：{{userInfo.teacher_no || '未登记'}}</text>
+    </view>
+    <view class="actions">
+      <button class="mini-btn" size="mini" bindtap="refreshData" loading="{{loading}}">刷新</button>
+      <button class="mini-btn logout" size="mini" bindtap="handleLogout">退出</button>
+    </view>
+  </view>
+
+  <view class="stats-grid">
+    <view class="stat-card">
+      <text class="stat-number">{{stats.total_users || 0}}</text>
+      <text class="stat-label">用户总数</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-number">{{stats.total_departments || 0}}</text>
+      <text class="stat-label">系部总数</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-number">{{stats.total_majors || 0}}</text>
+      <text class="stat-label">专业总数</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-number">{{stats.recent_logs || 0}}</text>
+      <text class="stat-label">今日日志</text>
+    </view>
+  </view>
+
+  <view class="quick-grid">
+    <view class="quick-card" bindtap="goUsers">
+      <text class="quick-badge">👥</text>
+      <text>用户管理</text>
+    </view>
+    <view class="quick-card" bindtap="goDepartments">
+      <text class="quick-badge">🏢</text>
+      <text>系部管理</text>
+    </view>
+    <view class="quick-card" bindtap="goMajors">
+      <text class="quick-badge">📚</text>
+      <text>专业管理</text>
+    </view>
+    <view class="quick-card" bindtap="goLogs">
+      <text class="quick-badge">📋</text>
+      <text>操作日志</text>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">最近操作日志</text>
+      <text class="section-link" bindtap="goLogs">查看全部</text>
+    </view>
+    <block wx:if="{{recentLogs.length}}">
+      <view class="card" wx:for="{{recentLogs}}" wx:key="id">
+        <view class="card-title">{{item.action_name}}</view>
+        <view class="card-meta">操作人：{{item.user_name}}（{{item.username}}）</view>
+        <view class="card-meta">时间：{{item.created_at_fmt}}</view>
+        <view class="card-desc" wx:if="{{item.resource_type}}">资源类型：{{item.resource_type}}</view>
+      </view>
+    </block>
+    <view class="empty" wx:else>暂无操作日志</view>
+  </view>
+
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">系统用户概览</text>
+      <text class="section-link" bindtap="goUsers">查看全部</text>
+    </view>
+    <view class="role-stats">
+      <view class="role-stat-item">
+        <text class="role-count">{{stats.student_count || 0}}</text>
+        <text class="role-label">学生</text>
+      </view>
+      <view class="role-stat-item">
+        <text class="role-count">{{stats.tutor_count || 0}}</text>
+        <text class="role-label">导师</text>
+      </view>
+      <view class="role-stat-item">
+        <text class="role-count">{{stats.admin_count || 0}}</text>
+        <text class="role-label">管理员</text>
+      </view>
+    </view>
+  </view>
+</view>

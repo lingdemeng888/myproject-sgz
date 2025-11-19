@@ -33,7 +33,9 @@ Page({
   },
 
   togglePassword() {
-    this.setData({ showPassword: !this.data.showPassword });
+    const newShowPassword = !this.data.showPassword;
+    console.log('[DEBUG] 切换密码显示状态:', newShowPassword ? '明文' : '密文');
+    this.setData({ showPassword: newShowPassword });
   },
 
   toggleRemember() {

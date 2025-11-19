@@ -215,5 +215,6 @@ module.exports = {
   post,
   put,
   del,
-  uploadFile
+  uploadFile,
+  upload: uploadFile  // 添加别名
 };

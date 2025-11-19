@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     # 文件上传配置
     upload_dir: str = Field(default="uploads", alias="UPLOAD_DIR")
-    max_upload_size: int = Field(default=52428800, alias="MAX_UPLOAD_SIZE")  # 50MB
+    max_upload_size: int = Field(default=1073741824, alias="MAX_UPLOAD_SIZE")  # 1GB
     allowed_extensions: str = Field(default=".pdf,.doc,.docx,.zip,.rar", alias="ALLOWED_EXTENSIONS")
 
     class Config:

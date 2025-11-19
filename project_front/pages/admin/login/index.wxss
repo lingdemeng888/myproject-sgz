@@ -51,17 +51,17 @@ page {
   margin-top: 12rpx;
   padding: 6rpx 36rpx;
   border-radius: 999rpx;
-  background: rgba(84,172,254,0.9);
+  background: linear-gradient(135deg, #e04b4b, #f06c6c);
   color: #fff;
   font-size: 28rpx;
   font-family: 'KaiTi','STKaiti','Kaiti SC','Noto Serif SC',serif;
-  box-shadow: 0 4rpx 12rpx rgba(5,37,64,0.45);
+  box-shadow: 0 4rpx 12rpx rgba(224,75,75,0.45);
 }
 
 .hero-tip {
   display: block;
   margin-top: 12rpx;
-  color: rgba(218,236,255,0.9);
+  color: rgba(255,230,230,0.9);
   font-size: 26rpx;
   text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.45);
 }
@@ -86,7 +86,7 @@ page {
 
 .card-title {
   display: block;
-  color: #e7f4ff;
+  color: #ffe7e7;
   font-size: 44rpx;
   font-family: 'KaiTi','STKaiti','Kaiti SC','Noto Serif SC',serif;
   text-shadow: 0 3rpx 6rpx rgba(0,0,0,0.5);
@@ -95,7 +95,7 @@ page {
 .card-desc {
   display: block;
   margin-top: 8rpx;
-  color: rgba(215,235,255,0.8);
+  color: rgba(255,225,225,0.8);
   font-size: 26rpx;
 }
 
@@ -126,8 +126,11 @@ page {
 }
 
 .eye-icon {
-  font-size: 38rpx;
-  color: #666;
+  font-size: 26rpx;
+  color: #e04b4b;
+  padding: 8rpx 12rpx;
+  background: rgba(224,75,75,0.1);
+  border-radius: 8rpx;
 }
 
 .helper-row {
@@ -157,7 +160,7 @@ page {
 }
 
 .checkbox.checked {
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  background: linear-gradient(135deg, #e04b4b, #f06c6c);
   border-color: transparent;
 }
 
@@ -166,7 +169,7 @@ page {
 }
 
 .link-text {
-  color: #aee0ff;
+  color: #ffb8b8;
 }
 
 .primary-btn {
@@ -174,11 +177,11 @@ page {
   height: 100rpx;
   border: none;
   border-radius: 18rpx;
-  background: linear-gradient(135deg, #1aa7ff, #6de1ff);
+  background: linear-gradient(135deg, #e04b4b, #f06c6c);
   color: #fff;
   font-size: 32rpx;
   font-weight: 600;
-  box-shadow: 0 12rpx 32rpx rgba(0,91,155,0.4);
+  box-shadow: 0 12rpx 32rpx rgba(224,75,75,0.5);
 }
 
 .primary-btn.disabled {
@@ -199,7 +202,7 @@ page {
   background: rgba(255,255,255,0.08);
   border-radius: 18rpx;
   font-size: 26rpx;
-  color: rgba(220,235,255,0.85);
+  color: rgba(255,220,220,0.85);
   gap: 12rpx;
 }
 

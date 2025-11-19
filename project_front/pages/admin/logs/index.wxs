@@ -1,0 +1,58 @@
+// 日志格式化工具函数
+var formatDate = function(value) {
+  if (!value) return '';
+  var date = getDate(value);
+  var y = date.getFullYear();
+  var m = (date.getMonth() + 1 < 10 ? '0' : '') + (date.getMonth() + 1);
+  var d = (date.getDate() < 10 ? '0' : '') + date.getDate();
+  var hh = (date.getHours() < 10 ? '0' : '') + date.getHours();
+  var mm = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+  return y + '-' + m + '-' + d + ' ' + hh + ':' + mm;
+};
+
+var getActionLabel = function(action) {
+  var actionMap = {
+    'CREATE': '创建',
+    'UPDATE': '更新',
+    'DELETE': '删除',
+    'LOGIN': '登录',
+    'LOGOUT': '登出',
+    'APPROVE': '批准',
+    'REJECT': '拒绝',
+    'REVIEW': '评审'
+  };
+  return actionMap[action] || action;
+};
+
+var getActionClass = function(action) {
+  var classMap = {
+    'CREATE': 'create',
+    'UPDATE': 'update',
+    'DELETE': 'delete',
+    'LOGIN': 'login',
+    'LOGOUT': 'logout',
+    'APPROVE': 'approve',
+    'REJECT': 'reject',
+    'REVIEW': 'review'
+  };
+  return classMap[action] || 'default';
+};
+
+var getResourceLabel = function(resourceType) {
+  var resourceMap = {
+    'user': '用户',
+    'department': '系部',
+    'major': '专业',
+    'topic': '选题',
+    'application': '申请',
+    'paper': '论文'
+  };
+  return resourceMap[resourceType] || resourceType;
+};
+
+module.exports = {
+  formatDate: formatDate,
+  getActionLabel: getActionLabel,
+  getActionClass: getActionClass,
+  getResourceLabel: getResourceLabel
+};

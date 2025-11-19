@@ -157,8 +157,11 @@ page {
 }
 
 .eye-icon {
-  font-size: 38rpx;
-  color: #666;
+  font-size: 26rpx;
+  color: #b58863;
+  padding: 8rpx 12rpx;
+  background: rgba(181,136,99,0.1);
+  border-radius: 8rpx;
 }
 
 .helper-row {

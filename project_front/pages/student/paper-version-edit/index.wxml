@@ -17,5 +17,19 @@
     <textarea class="textarea" placeholder="例如：初稿、修改版等" value="{{notes}}" bindinput="onNotesInput" maxlength="255"></textarea>
   </view>
 
+  <view class="card">
+    <view class="label">附件（可选）</view>
+    <view class="tip">💡 请先将文件发送到微信（如文件传输助手），然后点击下方按钮从聊天记录中选择</view>
+    <view class="tip">支持 PDF、Word、压缩包，最大1GB</view>
+    <button class="upload-btn" size="mini" bindtap="chooseFile">从聊天记录选择文件</button>
+    <view class="file-list" wx:if="{{selectedFiles.length}}">
+      <view class="file-item" wx:for="{{selectedFiles}}" wx:key="index">
+        <text class="file-name">{{item.name}}</text>
+        <text class="file-size">{{item.sizeText}}</text>
+        <text class="remove-btn" bindtap="removeFile" data-index="{{index}}">删除</text>
+      </view>
+    </view>
+  </view>
+
   <button class="btn" type="primary" loading="{{saving}}" bindtap="saveVersion">保存版本</button>
 </view>

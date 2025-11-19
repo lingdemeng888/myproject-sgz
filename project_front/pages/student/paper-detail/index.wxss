@@ -17,7 +17,7 @@
 .review-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10rpx}
 .review-label{font-size:26rpx;color:#b58863;font-weight:600}
 .review-time{font-size:22rpx;color:#999}
-.review-content{font-size:26rpx;color:#333;line-height:1.6;white-space:pre-line;margin-bottom:8rpx}
+.review-content{font-size:26rpx;color:#333;line-height:1.6;white-space:pre-wrap;word-wrap:break-word;word-break:break-all;margin-bottom:8rpx}
 .reviewer{font-size:22rpx;color:#999;text-align:right}
 .btn{width:100%;background:#b58863;color:#fff;border-radius:18rpx}
 .empty{text-align:center;color:#999;padding:40rpx}

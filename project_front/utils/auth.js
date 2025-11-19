@@ -189,6 +189,45 @@ function ensureTutor(options = {}) {
 }
 
 /**
+ * 确保当前用户已登录且为管理员角色
+ * @param {object} options - 选项
+ * @param {boolean} options.redirect - 是否在失败时跳转到登录页
+ * @param {boolean} options.toast - 是否提示用户
+ * @returns {object|null} 用户信息或null
+ */
+function ensureAdmin(options = {}) {
+  const { redirect = true, toast = true } = options;
+  const user = getUserInfo();
+
+  if (!user) {
+    if (toast) {
+      wx.showToast({ title: '请先登录管理员账号', icon: 'none' });
+    }
+    if (redirect) {
+      setTimeout(() => {
+        wx.reLaunch({ url: '/pages/admin/login/index' });
+      }, 800);
+    }
+    return null;
+  }
+
+  const hasAdminRole = Array.isArray(user.roles) && user.roles.includes(ROLE.ADMIN);
+  if (!hasAdminRole) {
+    if (toast) {
+      wx.showToast({ title: '当前账号非管理员角色', icon: 'none' });
+    }
+    if (redirect) {
+      setTimeout(() => {
+        wx.reLaunch({ url: '/pages/auth/identity/index' });
+      }, 800);
+    }
+    return null;
+  }
+
+  return user;
+}
+
+/**
  * 登录成功后跳转到对应首页
  * @param {string} role - 用户角色
  */
@@ -242,5 +281,6 @@ module.exports = {
   hasRole,
   login,
   ensureStudent,
-  ensureTutor
+  ensureTutor,
+  ensureAdmin
 };

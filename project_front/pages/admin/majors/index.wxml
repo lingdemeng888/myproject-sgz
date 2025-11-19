@@ -1,0 +1,111 @@
+<back-button />
+<view class="majors-page">
+  <view class="filter-bar">
+    <view class="filter-item">
+      <picker mode="selector" range="{{departmentOptions}}" range-key="label" value="{{deptFilterIndex}}" bindchange="onDeptFilterChange">
+        <view class="picker-display">
+          <text>系部：{{departmentOptions[deptFilterIndex].label}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="header-bar">
+    <text class="stats-text">共 {{total}} 个专业</text>
+    <view class="header-actions">
+      <button class="refresh-btn" size="mini" bindtap="refreshList" loading="{{loading}}">刷新</button>
+      <button class="add-btn" size="mini" bindtap="showAddDialog">新增专业</button>
+    </view>
+  </view>
+
+  <scroll-view class="major-list" scroll-y>
+    <block wx:if="{{majors.length}}">
+      <view class="major-card" wx:for="{{majors}}" wx:key="id">
+        <view class="major-header">
+          <view class="major-info">
+            <text class="major-name">{{item.name}}</text>
+            <text class="major-code" wx:if="{{item.code}}">代码：{{item.code}}</text>
+          </view>
+        </view>
+        
+        <view class="major-meta">
+          <text class="meta-item">所属系部：{{item.department_name || '未分配'}}</text>
+        </view>
+
+        <view class="major-meta" wx:if="{{item.description}}">
+          <text class="meta-label">简介：</text>
+          <text class="meta-value">{{item.description}}</text>
+        </view>
+
+        <view class="major-stats">
+          <text class="stat-item">创建时间：{{formatDate(item.created_at)}}</text>
+        </view>
+
+        <view class="major-actions">
+          <button class="action-btn" size="mini" bindtap="showEditDialog" data-item="{{item}}">编辑</button>
+          <button class="action-btn danger" size="mini" bindtap="deleteMajor" data-id="{{item.id}}" data-name="{{item.name}}">删除</button>
+        </view>
+      </view>
+    </block>
+    
+    <view class="empty" wx:if="{{!loading && majors.length === 0}}">
+      暂无专业数据
+    </view>
+  </scroll-view>
+</view>
+
+<!-- 新增/编辑对话框 -->
+<view class="modal {{showModal ? 'show' : ''}}" catchtap="closeDialog">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-header">
+      <text class="modal-title">{{isEdit ? '编辑专业' : '新增专业'}}</text>
+      <text class="modal-close" bindtap="closeDialog">✕</text>
+    </view>
+    <view class="modal-body">
+      <view class="form-group">
+        <text class="form-label">专业名称 *</text>
+        <input 
+          class="form-input" 
+          type="text" 
+          placeholder="请输入专业名称"
+          value="{{formData.name}}"
+          bindinput="onNameInput"
+        />
+      </view>
+      <view class="form-group">
+        <text class="form-label">专业代码</text>
+        <input 
+          class="form-input" 
+          type="text" 
+          placeholder="请输入专业代码（选填）"
+          value="{{formData.code}}"
+          bindinput="onCodeInput"
+        />
+      </view>
+      <view class="form-group">
+        <text class="form-label">所属系部 *</text>
+        <picker mode="selector" range="{{departments}}" range-key="name" value="{{selectedDeptIndex}}" bindchange="onDeptChange">
+          <view class="picker-display">
+            <text>{{selectedDeptIndex >= 0 ? departments[selectedDeptIndex].name : '请选择系部'}}</text>
+            <text class="arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+      <view class="form-group">
+        <text class="form-label">专业简介</text>
+        <textarea 
+          class="form-textarea" 
+          placeholder="请输入专业简介（选填）"
+          value="{{formData.description}}"
+          bindinput="onDescInput"
+          maxlength="500"
+        />
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="modal-btn cancel" bindtap="closeDialog">取消</button>
+      <button class="modal-btn confirm" bindtap="confirmSave">保存</button>
+    </view>
+  </view>
+</view>

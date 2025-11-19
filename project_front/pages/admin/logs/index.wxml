@@ -1,0 +1,91 @@
+<wxs src="./index.wxs" module="utils" />
+<back-button />
+<view class="logs-page">
+  <view class="filter-bar">
+    <view class="filter-row">
+      <view class="filter-item">
+        <picker mode="selector" range="{{actionOptions}}" range-key="label" value="{{actionFilterIndex}}" bindchange="onActionFilterChange">
+          <view class="picker-display">
+            <text>操作：{{actionOptions[actionFilterIndex].label}}</text>
+            <text class="arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+      <view class="filter-item">
+        <picker mode="selector" range="{{resourceOptions}}" range-key="label" value="{{resourceFilterIndex}}" bindchange="onResourceFilterChange">
+          <view class="picker-display">
+            <text>资源：{{resourceOptions[resourceFilterIndex].label}}</text>
+            <text class="arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="date-filter">
+      <picker mode="date" value="{{startDate}}" bindchange="onStartDateChange">
+        <view class="date-picker">
+          <text>{{startDate || '开始日期'}}</text>
+        </view>
+      </picker>
+      <text class="date-separator">至</text>
+      <picker mode="date" value="{{endDate}}" bindchange="onEndDateChange">
+        <view class="date-picker">
+          <text>{{endDate || '结束日期'}}</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="stats-bar">
+    <text class="stats-text">共 {{total}} 条记录</text>
+    <view class="header-actions">
+      <button class="clear-btn" size="mini" bindtap="clearFilters">清除筛选</button>
+      <button class="refresh-btn" size="mini" bindtap="refreshList" loading="{{loading}}">刷新</button>
+    </view>
+  </view>
+
+  <scroll-view 
+    class="log-list" 
+    scroll-y 
+    bindscrolltolower="loadMore"
+    lower-threshold="100"
+  >
+    <block wx:if="{{logs.length}}">
+      <view class="log-card" wx:for="{{logs}}" wx:key="id">
+        <view class="log-header">
+          <view class="action-badge {{utils.getActionClass(item.action)}}">
+            {{utils.getActionLabel(item.action)}}
+          </view>
+        </view>
+        
+        <view class="log-content">
+          <view class="log-row">
+            <text class="log-label">操作人：</text>
+            <text class="log-value">{{item.real_name || item.username}} ({{item.username}})</text>
+          </view>
+          
+          <view class="log-row">
+            <text class="log-label">时间：</text>
+            <text class="log-value">{{utils.formatDate(item.created_at)}}</text>
+          </view>
+          
+          <view class="log-row">
+            <text class="log-label">资源类型：</text>
+            <text class="log-value">{{utils.getResourceLabel(item.resource_type)}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <view class="empty" wx:if="{{!loading && logs.length === 0}}">
+      暂无日志记录
+    </view>
+
+    <view class="loading-more" wx:if="{{loadingMore}}">
+      <text>加载中...</text>
+    </view>
+
+    <view class="no-more" wx:if="{{!hasMore && logs.length > 0}}">
+      <text>没有更多了</text>
+    </view>
+  </scroll-view>
+</view>

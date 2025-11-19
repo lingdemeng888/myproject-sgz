@@ -1,0 +1,132 @@
+<back-button />
+<view class="users-page">
+  <view class="filter-bar">
+    <view class="filter-item">
+      <picker mode="selector" range="{{roleOptions}}" range-key="label" value="{{roleFilterIndex}}" bindchange="onRoleFilterChange">
+        <view class="picker-display">
+          <text>角色：{{roleOptions[roleFilterIndex].label}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+    <view class="filter-item">
+      <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusFilterIndex}}" bindchange="onStatusFilterChange">
+        <view class="picker-display">
+          <text>状态：{{statusOptions[statusFilterIndex].label}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="search-bar">
+    <input 
+      class="search-input" 
+      type="text" 
+      placeholder="搜索用户名、姓名或学号/工号"
+      value="{{searchKeyword}}"
+      bindinput="onSearchInput"
+      confirm-type="search"
+      bindconfirm="handleSearch"
+    />
+    <button class="search-btn" bindtap="handleSearch">搜索</button>
+  </view>
+
+  <view class="stats-bar">
+    <text class="stats-text">共 {{total}} 位用户</text>
+    <button class="refresh-btn" size="mini" bindtap="refreshList" loading="{{loading}}">刷新</button>
+  </view>
+
+  <scroll-view 
+    class="user-list" 
+    scroll-y 
+    bindscrolltolower="loadMore"
+    lower-threshold="100"
+  >
+    <block wx:if="{{users.length}}">
+      <view class="user-card" wx:for="{{users}}" wx:key="id">
+        <view class="user-header">
+          <view class="user-info">
+            <text class="user-name">{{item.real_name || '未设置'}}</text>
+            <text class="user-username">@{{item.username}}</text>
+          </view>
+          <view class="user-status {{item.status === 1 ? 'active' : 'inactive'}}" bindtap="toggleUserStatus" data-id="{{item.id}}" data-status="{{item.status}}">
+            {{item.status === 1 ? '正常' : '禁用'}}
+          </view>
+        </view>
+        
+        <view class="user-meta">
+          <text class="meta-item">ID: {{item.id}}</text>
+          <text class="meta-item" wx:if="{{item.student_no}}">学号: {{item.student_no}}</text>
+          <text class="meta-item" wx:if="{{item.teacher_no}}">工号: {{item.teacher_no}}</text>
+        </view>
+
+        <view class="user-roles">
+          <text class="role-tag" wx:for="{{item.roles}}" wx:for-item="role" wx:key="*this" wx:if="{{role}}">
+            {{role === 'STUDENT' ? '学生' : role === 'TUTOR' ? '导师' : role === 'ADMIN' ? '管理员' : role}}
+          </text>
+        </view>
+
+        <view class="user-actions">
+          <button class="action-btn" size="mini" bindtap="showRoleDialog" data-user="{{item}}">分配角色</button>
+          <button class="action-btn secondary" size="mini" bindtap="viewUserDetail" data-id="{{item.id}}">查看详情</button>
+        </view>
+      </view>
+    </block>
+    
+    <view class="empty" wx:if="{{!loading && users.length === 0}}">
+      暂无用户数据
+    </view>
+
+    <view class="loading-more" wx:if="{{loadingMore}}">
+      <text>加载中...</text>
+    </view>
+
+    <view class="no-more" wx:if="{{!hasMore && users.length > 0}}">
+      <text>没有更多了</text>
+    </view>
+  </scroll-view>
+</view>
+
+<!-- 角色分配对话框 -->
+<view class="modal {{showRoleModal ? 'show' : ''}}" catchtap="closeRoleDialog">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-header">
+      <text class="modal-title">分配角色</text>
+      <text class="modal-close" bindtap="closeRoleDialog">✕</text>
+    </view>
+    <view class="modal-body">
+      <text class="modal-desc">用户：{{currentUser.real_name}}（{{currentUser.username}}）</text>
+      <view class="role-options">
+        <view 
+          class="role-option {{selectedRoles.includes('STUDENT') ? 'selected' : ''}}"
+          bindtap="toggleRole"
+          data-role="STUDENT"
+        >
+          <text class="checkbox">{{selectedRoles.includes('STUDENT') ? '☑' : '☐'}}</text>
+          <text>学生</text>
+        </view>
+        <view 
+          class="role-option {{selectedRoles.includes('TUTOR') ? 'selected' : ''}}"
+          bindtap="toggleRole"
+          data-role="TUTOR"
+        >
+          <text class="checkbox">{{selectedRoles.includes('TUTOR') ? '☑' : '☐'}}</text>
+          <text>导师</text>
+        </view>
+        <view 
+          class="role-option {{selectedRoles.includes('ADMIN') ? 'selected' : ''}}"
+          bindtap="toggleRole"
+          data-role="ADMIN"
+        >
+          <text class="checkbox">{{selectedRoles.includes('ADMIN') ? '☑' : '☐'}}</text>
+          <text>管理员</text>
+        </view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="modal-btn cancel" bindtap="closeRoleDialog">取消</button>
+      <button class="modal-btn confirm" bindtap="confirmRoleAssignment">确定</button>
+    </view>
+  </view>
+</view>
